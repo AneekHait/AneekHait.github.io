@@ -254,16 +254,16 @@
 
             </div>
              <!-- This empty div is for the right side on larger screens -->
-            <div class="lg:col-span-1 space-y-8" id="right-column-skills">
-                <div class="card">
-                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-green-500 to-purple-500 rounded-full mr-4"></div>Dataset Distribution</h2>
-                     <div class="chart-container" style="height: 300px;"><canvas id="datasetDistChart"></canvas></div>
-                </div>
-                <div class="card technical-skills-card">
-                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-full mr-4"></div>Technical Skills</h2>
-                     <div class="space-y-8">
-                        <div class="chart-container"><canvas id="skillsRadarChart"></canvas></div>
-                     </div>
+            <div class="lg:col-span-1" id="right-column-skills">
+                <div class="sticky top-4 space-y-8">
+                    <div class="card">
+                        <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-green-500 to-purple-500 rounded-full mr-4"></div>Dataset Distribution</h2>
+                        <div class="chart-container" style="height: 350px;"><canvas id="datasetDistChart"></canvas></div>
+                    </div>
+                    <div class="card technical-skills-card">
+                        <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-full mr-4"></div>Technical Skills</h2>
+                        <div class="chart-container" style="height: 350px;"><canvas id="skillsRadarChart"></canvas></div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -465,34 +465,29 @@
             });
 
 
-            // Move skills section to the right column on large screens
-             const moveSkillsSection = () => {
-                const rightColumn = document.getElementById('right-column-skills');
-                const mainColumn = document.querySelector('.lg\\:col-span-2');
-                
-                if (window.innerWidth < 1024) {
-                    if (mainColumn && rightColumn.children.length > 0) {
-                        Array.from(rightColumn.children).forEach(child => {
-                             mainColumn.appendChild(child);
-                        });
-                    }
-                } else {
-                    // This logic is simplified: assumes cards to be moved have a specific class or are known
-                    const cardsToMove = document.querySelectorAll('.technical-skills-card, .card:has(#datasetDistChart)');
-                     cardsToMove.forEach(card => {
-                        if (mainColumn.contains(card.parentElement)) {
-                            rightColumn.appendChild(card.parentElement);
-                        } else if (mainColumn.contains(card)){
-                             rightColumn.appendChild(card);
-                        }
-                     });
+            // Handle chart resizing and positioning
+            const handleChartLayout = () => {
+                if (window.innerWidth >= 1024) { // Desktop view
+                    const rightColumn = document.getElementById('right-column-skills');
+                    const stickyContainer = rightColumn.querySelector('.sticky');
+                    const containerHeight = window.innerHeight - 32; // 32px for top-4 spacing
+                    stickyContainer.style.maxHeight = `${containerHeight}px`;
+                    stickyContainer.style.overflowY = 'auto';
+                }
+
+                // Resize charts if they exist
+                if (skillsRadarChartInstance) {
+                    skillsRadarChartInstance.resize();
+                }
+                if (datasetDistChartInstance) {
+                    datasetDistChartInstance.resize();
                 }
             };
             
             // Re-check on window resize
-            window.addEventListener('resize', moveSkillsSection);
-            // We need to run this on load as well to set the initial state correctly.
-            moveSkillsSection(); 
+            window.addEventListener('resize', handleChartLayout);
+            // Initial setup
+            setTimeout(handleChartLayout, 100);
         });
     </script>
 </body>
