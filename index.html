@@ -1,0 +1,500 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aneek Hait - Data & BI Analyst Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        /* Light Mode Defaults */
+        :root {
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+            --bg-color: #f9fafb;
+            --text-color: #111827;
+            --card-bg: white;
+            --card-border: #e5e7eb;
+            --header-bg: linear-gradient(to bottom right, rgba(59, 130, 246, 0.1), rgba(34, 197, 94, 0.1));
+            --hero-gradient-1: rgba(59,130,246,0.1);
+            --hero-gradient-2: rgba(34,197,94,0.1);
+            --timeline-border: #d1d5db;
+            --timeline-dot-border: #f9fafb;
+            --timeline-hover-bg: rgba(0,0,0,0.03);
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-tertiary: #6b7280;
+            --link-bg: #f3f4f6;
+            --link-bg-hover: #e5e7eb;
+        }
+
+        /* Dark Mode Overrides */
+        .dark {
+            --bg-color: #030712;
+            --text-color: #f9fafb;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --header-bg: linear-gradient(to bottom right, rgba(59, 130, 246, 0.2), rgba(34, 197, 94, 0.2));
+            --hero-gradient-1: rgba(59,130,246,0.15);
+            --hero-gradient-2: rgba(34,197,94,0.15);
+            --timeline-border: #374151;
+            --timeline-dot-border: #030712;
+            --timeline-hover-bg: rgba(255,255,255,0.05);
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --link-bg: #374151;
+            --link-bg-hover: #4b5563;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s, border-color 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        .hero-bg {
+            background-image: var(--header-bg);
+        }
+
+        .timeline-entry {
+            transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+            padding: 1rem;
+            margin-left: -1rem;
+            border-radius: 0.75rem;
+        }
+        .timeline-entry:hover {
+            transform: scale(1.02);
+            background-color: var(--timeline-hover-bg);
+        }
+    </style>
+</head>
+<body class="dark">
+    <!-- Theme toggle button -->
+    <button id="theme-toggle" class="fixed top-4 right-4 z-50 p-2 rounded-full bg-gray-700/50 text-white hover:bg-gray-600/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white">
+        <i class="fas fa-sun hidden" id="theme-toggle-light-icon"></i>
+        <i class="fas fa-moon" id="theme-toggle-dark-icon"></i>
+    </button>
+
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header Section -->
+        <header class="mb-12 text-center hero-bg py-20 px-6 rounded-2xl relative overflow-hidden">
+             <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,var(--hero-gradient-1),transparent_50%)]"></div>
+             <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,var(--hero-gradient-2),transparent_50%)]"></div>
+            <div class="relative">
+                <h1 class="text-5xl md:text-6xl font-bold">Aneek Hait</h1>
+                <p class="text-2xl md:text-3xl text-blue-500 font-semibold mt-2">Data & BI Analyst</p>
+                <div class="flex flex-wrap items-center justify-center gap-4 mt-6 text-blue-300">
+                    <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt"></i><span>Kolkata, India</span></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Strip -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="card flex flex-col items-center justify-center"><div class="flex items-center gap-3"><i class="fas fa-briefcase text-xl text-blue-400"></i><p class="text-sm text-tertiary">Years Experience</p></div><p id="kpi-years" class="text-4xl font-bold text-blue-400 mt-2">0+</p></div>
+            <div class="card flex flex-col items-center justify-center"><div class="flex items-center gap-3"><i class="fas fa-database text-xl text-green-400"></i><p class="text-sm text-tertiary">Datasets Analyzed</p></div><p id="kpi-datasets" class="text-4xl font-bold text-green-400 mt-2">0+</p></div>
+            <div class="card flex flex-col items-center justify-center"><div class="flex items-center gap-3"><i class="fas fa-chart-line text-xl text-yellow-400"></i><p class="text-sm text-tertiary">Efficiency Gain</p></div><p id="kpi-efficiency" class="text-4xl font-bold text-yellow-400 mt-2">0%</p></div>
+            <div class="card flex flex-col items-center justify-center"><div class="flex items-center gap-3"><i class="fas fa-award text-xl text-purple-400"></i><p class="text-sm text-tertiary">Certifications</p></div><p id="kpi-certs" class="text-4xl font-bold text-purple-400 mt-2">0</p></div>
+        </section>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+             <div class="lg:col-span-2 space-y-8">
+                <!-- Profile Summary -->
+                <div class="card">
+                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-full mr-4"></div>Profile</h2>
+                    <p id="profile-description" class="text-lg leading-relaxed text-text-secondary">
+                        Data Analyst with 3 years of experience specializing in descriptive analysis, text analysis, and data visualization. Proven ability to translate complex datasets into clear, impactful insights that guide business strategy. Dedicated to ensuring data accuracy and integrity while delivering actionable findings to stakeholders.
+                    </p>
+                </div>
+                
+                 <!-- Work Experience -->
+                <div class="card">
+                    <h2 class="text-3xl font-bold mb-6 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-full mr-4"></div>Work Experience</h2>
+                    <div class="relative border-l-2" style="border-color: var(--timeline-border);">
+                        <div class="relative pl-6 pb-10 timeline-entry">
+                            <div class="absolute -left-[18px] top-6 h-4 w-4 rounded-full bg-blue-500" style="border: 2px solid var(--timeline-dot-border);"></div>
+                            <p class="text-sm font-medium text-blue-400">08/2023 - Present</p>
+                            <h3 class="text-xl font-semibold text-text-primary">Software Engineer (Data Analyst)</h3>
+                            <p class="text-md text-text-tertiary font-medium">Accenture | Kolkata</p>
+                            <ul class="mt-2 list-disc list-inside text-text-secondary space-y-1">
+                                <li>Analyzed over 100+ datasets, encompassing millions of data points, to inform strategic business decisions and drive growth.</li>
+                                <li>Utilized text analysis on unstructured data to extract key insights on customer feedback and market trends.</li>
+                                <li>Developed and maintained interactive dashboards using Tableau and Excel to visualize and summarize key trends, patterns, and outliers for stakeholders.</li>
+                                <li>Collaborated with cross-functional teams including marketing, finance, and product to deliver data-driven recommendations that improved operational efficiency by an estimated 15%.</li>
+                                <li>Ensured data accuracy and integrity across all analyses by implementing robust quality assurance protocols.</li>
+                                <li>Presented actionable insights and performance reports to senior management and key stakeholders, translating complex data into clear, impactful findings.</li>
+                            </ul>
+                        </div>
+                         <div class="relative pl-6 pb-10 timeline-entry">
+                            <div class="absolute -left-[18px] top-6 h-4 w-4 rounded-full bg-blue-500" style="border: 2px solid var(--timeline-dot-border);"></div>
+                            <p class="text-sm font-medium text-blue-400">07/2022 - 08/2023</p>
+                            <h3 class="text-xl font-semibold text-text-primary">Associate Software Engineer (Angular)</h3>
+                            <p class="text-md text-text-tertiary font-medium">Accenture | Kolkata</p>
+                             <ul class="mt-2 list-disc list-inside text-text-secondary space-y-1">
+                                <li>Developed and maintained Angular applications using best practices and design patterns.</li>
+                                <li>Collaborated with UX/UI designers to implement responsive and user-friendly interfaces.</li>
+                                <li>Wrote clean, modular, and testable code using TypeScript.</li>
+                                <li>Optimized application performance using lazy loading, caching, and code splitting techniques.</li>
+                                <li>Debugged and troubleshooted issues using browser developer tools and logging frameworks.</li>
+                                <li>Participated in code reviews, sprint planning, and agile ceremonies.</li>
+                                <li>Mentored junior developers and contributed to the company's knowledge base.</li>
+                            </ul>
+                        </div>
+                         <div class="relative pl-6 timeline-entry">
+                            <div class="absolute -left-[18px] top-6 h-4 w-4 rounded-full bg-blue-500" style="border: 2px solid var(--timeline-dot-border);"></div>
+                            <p class="text-sm font-medium text-blue-400">03/2022 - 05/2022</p>
+                            <h3 class="text-xl font-semibold text-text-primary">Software Developer Intern</h3>
+                            <p class="text-md text-text-tertiary font-medium">Accenture</p>
+                             <ul class="mt-2 list-disc list-inside text-text-secondary space-y-1">
+                               <li>Learnt about different Software Development Methodologies (Agile, DevOps, Waterfall etc.)</li>
+                               <li>Learnt different Software Testing Methodologies.</li>
+                               <li>Learnt Selenium to automate testing process and wrote scripts in Java to test several sites.</li>
+                               <li>Built a script in Java to Smoke test an E-Commerce website of a client.</li>
+                           </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="space-y-8">
+                <!-- Certifications -->
+                <div class="card">
+                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-yellow-500 to-purple-500 rounded-full mr-4"></div>Certifications</h2>
+                    <ul class="space-y-4 text-text-secondary">
+                        <li class="flex items-start justify-between">
+                            <a href="#" target="_blank" class="hover:text-yellow-300 transition-colors group">
+                                <p class="font-semibold group-hover:underline text-text-primary">Power BI Data Analyst Associate</p>
+                                <p class="text-sm text-text-tertiary">Microsoft</p>
+                            </a>
+                            <i class="fas fa-award text-yellow-400 mt-1 ml-3"></i>
+                        </li>
+                         <li class="flex items-start justify-between">
+                            <a href="#" target="_blank" class="hover:text-yellow-300 transition-colors group">
+                                <p class="font-semibold group-hover:underline text-text-primary">Associate Data Practitioner</p>
+                                <p class="text-sm text-text-tertiary">Google Cloud</p>
+                            </a>
+                            <i class="fas fa-award text-yellow-400 mt-1 ml-3"></i>
+                        </li>
+                         <li class="flex items-start justify-between">
+                            <a href="#" target="_blank" class="hover:text-yellow-300 transition-colors group">
+                                <p class="font-semibold group-hover:underline text-text-primary">Professional Data Engineer</p>
+                                <p class="text-sm text-text-tertiary">Google Cloud</p>
+                            </a>
+                            <i class="fas fa-award text-yellow-400 mt-1 ml-3"></i>
+                        </li>
+                         <li class="flex items-start justify-between">
+                            <a href="#" target="_blank" class="hover:text-yellow-300 transition-colors group">
+                                <p class="font-semibold group-hover:underline text-text-primary">Azure Fundamentals</p>
+                                <p class="text-sm text-text-tertiary">Microsoft</p>
+                            </a>
+                            <i class="fas fa-award text-yellow-400 mt-1 ml-3"></i>
+                        </li>
+                         <li class="flex items-start justify-between">
+                            <a href="#" target="_blank" class="hover:text-yellow-300 transition-colors group">
+                                <p class="font-semibold group-hover:underline text-text-primary">Security, Compliance, and Identity Fundamentals</p>
+                                <p class="text-sm text-text-tertiary">Microsoft</p>
+                            </a>
+                            <i class="fas fa-award text-yellow-400 mt-1 ml-3"></i>
+                        </li>
+                    </ul>
+                </div>
+
+                 <!-- Education -->
+                 <div class="card">
+                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-full mr-4"></div>Education</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="font-semibold text-lg text-text-primary">B.Tech in Computer Science & Engineering</p>
+                            <p class="text-sm text-text-tertiary">Techno International New Town (2019-2022)</p>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-lg text-text-primary">Diploma in Computer Science & Technology</p>
+                            <p class="text-sm text-text-tertiary">Budge Budge Institute of Technology (2016-2019)</p>
+                        </div>
+                    </div>
+                </div>
+                 
+                 <!-- Get in Touch -->
+                <div class="card">
+                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mr-4"></div>Get In Touch</h2>
+                     <div class="space-y-4">
+                        <p class="text-text-tertiary">The best way to reach me is through my professional profiles.</p>
+                        <a href="https://www.linkedin.com/in/aneekhait/" target="_blank" class="text-white font-bold py-3 px-4 rounded-lg flex items-center gap-3 transition-transform transform hover:scale-105 w-full" style="background-color: var(--link-bg);"><i class="fab fa-linkedin w-5 text-center"></i><span class="text-text-primary">Connect on LinkedIn</span></a>
+                        <a href="https://github.com/AneekHait" target="_blank" class="text-white font-bold py-3 px-4 rounded-lg flex items-center gap-3 transition-transform transform hover:scale-105 w-full" style="background-color: var(--link-bg);"><i class="fab fa-github w-5 text-center"></i><span class="text-text-primary">View my GitHub</span></a>
+                        <a href="AneekHait_Resume.pdf" download="AneekHait_Resume.pdf" class="text-white font-bold py-3 px-4 rounded-lg flex items-center gap-3 transition-transform transform hover:scale-105 w-full" style="background-color: var(--link-bg);"><i class="fas fa-file-arrow-down w-5 text-center"></i><span class="text-text-primary">Download Resume</span></a>
+                     </div>
+                </div>
+
+            </div>
+             <!-- This empty div is for the right side on larger screens -->
+            <div class="lg:col-span-1 space-y-8" id="right-column-skills">
+                <div class="card">
+                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-green-500 to-purple-500 rounded-full mr-4"></div>Dataset Distribution</h2>
+                     <div class="chart-container" style="height: 300px;"><canvas id="datasetDistChart"></canvas></div>
+                </div>
+                <div class="card technical-skills-card">
+                     <h2 class="text-3xl font-bold mb-4 flex items-center text-text-primary"><div class="h-1 w-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-full mr-4"></div>Technical Skills</h2>
+                     <div class="space-y-8">
+                        <div class="chart-container"><canvas id="skillsRadarChart"></canvas></div>
+                     </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- Theme Toggle ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const body = document.body;
+
+            const applyTheme = (theme) => {
+                if (theme === 'light') {
+                    body.classList.remove('dark');
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                } else {
+                    body.classList.add('dark');
+                    darkIcon.classList.remove('hidden');
+                    lightIcon.classList.add('hidden');
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
+
+            themeToggleBtn.addEventListener('click', () => {
+                const newTheme = body.classList.contains('dark') ? 'light' : 'dark';
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+                // We need to destroy and recreate charts on theme change for colors to update
+                destroyCharts();
+                if(chartsInitialized) createAllCharts();
+            });
+
+            // --- KPI Animation ---
+            function animateValue(obj, start, end, duration, suffix = '') {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    obj.innerHTML = Math.floor(progress * (end - start) + start) + suffix;
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            animateValue(document.getElementById('kpi-years'), 0, 3, 1500, '+');
+            animateValue(document.getElementById('kpi-datasets'), 0, 100, 1500, '+');
+            animateValue(document.getElementById('kpi-efficiency'), 0, 15, 1500, '%');
+            animateValue(document.getElementById('kpi-certs'), 0, 5, 1500);
+
+            // --- Chart.js Logic ---
+            const skillsData = {
+                'Tableau': 95, 
+                'PowerBI': 95, 
+                'Excel': 80, 
+                'Python': 90, 
+                'SQL': 85, 
+                'JavaScript': 80, 
+                'Angular': 80, 
+                'HTML/CSS': 85
+            };
+            
+            const datasetDistData = {
+                'Ticket Data': 40,
+                'Customer Analytics': 25,
+                'Financial Data': 15,
+                'Marketing Insights': 10,
+                'Operational Metrics': 10
+            };
+
+            let skillsRadarChartInstance, datasetDistChartInstance;
+            let chartsInitialized = false;
+
+            const radarChartOptions = () => {
+                const isDarkMode = document.body.classList.contains('dark');
+                const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+                const tickColor = isDarkMode ? '#d1d5db' : '#4b5563';
+                const pointLabelColor = isDarkMode ? '#f9fafb' : '#111827';
+
+                return {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 100,
+                            backgroundColor: 'transparent',
+                            grid: { color: gridColor },
+                            angleLines: { color: gridColor },
+                            pointLabels: { color: pointLabelColor, font: { size: 12 } },
+                            ticks: {
+                                color: tickColor,
+                                backdropColor: 'transparent',
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } } },
+                    animation: { duration: 1500, easing: 'easeInOutQuart' }
+                }
+            };
+            
+            const doughnutChartOptions = () => {
+                const isDarkMode = document.body.classList.contains('dark');
+                const legendColor = isDarkMode ? '#d1d5db' : '#4b5563';
+                return {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: legendColor } },
+                        tooltip: { callbacks: { label: (context) => `${context.label}: ${context.raw}%` } }
+                    },
+                     animation: { duration: 1500, easing: 'easeInOutQuart' }
+                }
+            };
+
+            const createRadarChart = (ctx, data) => {
+                return new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: Object.keys(data),
+                        datasets: [{
+                            label: 'Proficiency',
+                            data: Object.values(data),
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgb(59, 130, 246)',
+                            pointBackgroundColor: 'rgb(59, 130, 246)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgb(59, 130, 246)',
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: radarChartOptions()
+                });
+            };
+
+            const createDoughnutChart = (ctx, data) => {
+                return new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(data),
+                        datasets: [{
+                            label: 'Distribution',
+                            data: Object.values(data),
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(34, 197, 94, 0.7)',
+                                'rgba(234, 179, 8, 0.7)',
+                                'rgba(139, 92, 246, 0.7)',
+                                'rgba(236, 72, 153, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgb(59, 130, 246)',
+                                'rgb(34, 197, 94)',
+                                'rgb(234, 179, 8)',
+                                'rgb(139, 92, 246)',
+                                'rgb(236, 72, 153)'
+                            ],
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: doughnutChartOptions()
+                });
+            };
+
+            function createAllCharts() {
+                skillsRadarChartInstance = createRadarChart(document.getElementById('skillsRadarChart').getContext('2d'), skillsData);
+                datasetDistChartInstance = createDoughnutChart(document.getElementById('datasetDistChart').getContext('2d'), datasetDistData);
+            }
+
+            function destroyCharts() {
+                if (skillsRadarChartInstance) skillsRadarChartInstance.destroy();
+                if (datasetDistChartInstance) datasetDistChartInstance.destroy();
+            }
+
+            // --- Intersection Observer for Charts ---
+            const chartObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                         if (!chartsInitialized) {
+                            createAllCharts();
+                            chartsInitialized = true;
+                         }
+                         // No need to disconnect if we want re-animation on scroll, but for one-time, this is fine.
+                         observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.card:has(canvas)').forEach(card => {
+                chartObserver.observe(card);
+            });
+
+
+            // Move skills section to the right column on large screens
+             const moveSkillsSection = () => {
+                const rightColumn = document.getElementById('right-column-skills');
+                const mainColumn = document.querySelector('.lg\\:col-span-2');
+                
+                if (window.innerWidth < 1024) {
+                    if (mainColumn && rightColumn.children.length > 0) {
+                        Array.from(rightColumn.children).forEach(child => {
+                             mainColumn.appendChild(child);
+                        });
+                    }
+                } else {
+                    // This logic is simplified: assumes cards to be moved have a specific class or are known
+                    const cardsToMove = document.querySelectorAll('.technical-skills-card, .card:has(#datasetDistChart)');
+                     cardsToMove.forEach(card => {
+                        if (mainColumn.contains(card.parentElement)) {
+                            rightColumn.appendChild(card.parentElement);
+                        } else if (mainColumn.contains(card)){
+                             rightColumn.appendChild(card);
+                        }
+                     });
+                }
+            };
+            
+            // Re-check on window resize
+            window.addEventListener('resize', moveSkillsSection);
+            // We need to run this on load as well to set the initial state correctly.
+            moveSkillsSection(); 
+        });
+    </script>
+</body>
+</html>
+
