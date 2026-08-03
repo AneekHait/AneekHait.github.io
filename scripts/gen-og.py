@@ -1,146 +1,102 @@
-"""
-Generates assets/og.png — the 1200x630 Open Graph / Twitter card for the portfolio.
-Run from repo root:  python scripts/gen-og.py
+"""Generate the 1200x630 Open Graph card at assets/og.png.
+
+Run from the repository root:
+    python scripts/gen-og.py
 """
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "assets" / "og.png"
-PHOTO = ROOT / "assets" / "pp.png"
 
-W, H = 1200, 630
+WIDTH = 1200
+HEIGHT = 630
 
-# Portfolio palette
-BG_TOP = (252, 247, 239)         # #fcf7ef
-BG_BOT = (235, 223, 203)         # #ebdfcb
-ACCENT = (213, 103, 67)          # #d56743
-ACCENT_DEEP = (159, 61, 33)      # #9f3d21
-TEXT = (23, 19, 17)              # #171311
-MUTED = (77, 70, 64)             # #4d4640
+INK = (21, 23, 22)
+PAPER = (243, 240, 232)
+MUTED = (194, 196, 188)
+CORAL = (240, 100, 69)
+TEAL = (25, 167, 155)
+CHARTREUSE = (199, 223, 62)
+GRID = (255, 255, 255, 24)
 
-# Windows-resident substitutes (Fraunces -> Georgia, Space Grotesk -> Segoe UI)
 FONT_DISPLAY_BOLD = "C:/Windows/Fonts/georgiab.ttf"
 FONT_BODY_BOLD = "C:/Windows/Fonts/segoeuib.ttf"
 FONT_BODY = "C:/Windows/Fonts/segoeui.ttf"
 
 
-def gradient_bg() -> Image.Image:
-    """Vertical warm cream gradient + soft terracotta radial glow top-left."""
-    img = Image.new("RGB", (W, H), BG_TOP)
-    px = img.load()
-    for y in range(H):
-        t = y / (H - 1)
-        r = int(BG_TOP[0] * (1 - t) + BG_BOT[0] * t)
-        g = int(BG_TOP[1] * (1 - t) + BG_BOT[1] * t)
-        b = int(BG_TOP[2] * (1 - t) + BG_BOT[2] * t)
-        for x in range(W):
-            px[x, y] = (r, g, b)
-
-    # Soft radial accent glow — terracotta in top-left, teal hint in bottom-right
-    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    gd = ImageDraw.Draw(glow)
-    gd.ellipse((-280, -300, 520, 500), fill=(213, 103, 67, 38))
-    gd.ellipse((W - 480, H - 360, W + 240, H + 360), fill=(14, 123, 114, 28))
-    glow = glow.filter(ImageFilter.GaussianBlur(80))
-    img = Image.alpha_composite(img.convert("RGBA"), glow).convert("RGB")
-    return img
-
-
-def circular_photo(size: int) -> Image.Image:
-    """Crop pp.png into a circle of given diameter with a soft ring."""
-    src = Image.open(PHOTO).convert("RGBA")
-    # Square-crop centered
-    s = min(src.size)
-    src = src.crop(((src.width - s) // 2, (src.height - s) // 2,
-                    (src.width + s) // 2, (src.height + s) // 2))
-    src = src.resize((size, size), Image.LANCZOS)
-
-    mask = Image.new("L", (size, size), 0)
-    ImageDraw.Draw(mask).ellipse((0, 0, size, size), fill=255)
-
-    out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    out.paste(src, (0, 0), mask)
-    return out
-
-
 def draw_card() -> Image.Image:
-    img = gradient_bg().convert("RGBA")
-    d = ImageDraw.Draw(img)
+    image = Image.new("RGB", (WIDTH, HEIGHT), INK)
+    draw = ImageDraw.Draw(image, "RGBA")
 
-    f_eyebrow = ImageFont.truetype(FONT_BODY_BOLD, 24)
-    f_name = ImageFont.truetype(FONT_DISPLAY_BOLD, 104)
-    f_tagline = ImageFont.truetype(FONT_DISPLAY_BOLD, 56)
-    f_footer = ImageFont.truetype(FONT_BODY, 22)
-    f_url = ImageFont.truetype(FONT_BODY_BOLD, 22)
+    for x in range(700, WIDTH, 48):
+        draw.line((x, 0, x, HEIGHT), fill=GRID, width=1)
+    for y in range(0, HEIGHT, 48):
+        draw.line((700, y, WIDTH, y), fill=GRID, width=1)
 
-    pad_x = 80
-    text_top = 150
+    draw.rectangle((1178, 0, 1200, 226), fill=CHARTREUSE)
+    draw.rectangle((822, 608, 1200, 630), fill=CORAL)
+    draw.text((742, 48), "SIGNAL MAP / 2026", font=ImageFont.truetype(FONT_BODY_BOLD, 18), fill=MUTED)
+    chart_left, chart_top, chart_right, chart_bottom = 756, 116, 1138, 500
+    draw.line((chart_left, chart_top, chart_left, chart_bottom), fill=(255, 255, 255, 105), width=2)
+    draw.line((chart_left, chart_bottom, chart_right, chart_bottom), fill=(255, 255, 255, 105), width=2)
 
-    # Eyebrow: accent bar + label
-    bar_w, bar_h = 56, 4
-    bar_y = text_top + 12
-    d.rectangle((pad_x, bar_y, pad_x + bar_w, bar_y + bar_h),
-                fill=ACCENT)
-    d.text((pad_x + bar_w + 18, text_top), "DATA & BI ANALYST",
-           font=f_eyebrow, fill=MUTED, spacing=4)
+    bar_heights = (108, 214, 166, 292, 246, 356)
+    bar_colors = (CORAL, TEAL, CHARTREUSE, CORAL, TEAL, CHARTREUSE)
+    for index, (bar_height, color) in enumerate(zip(bar_heights, bar_colors)):
+        bar_left = chart_left + 34 + index * 56
+        bar_right = bar_left + 28
+        bar_top = chart_bottom - bar_height
+        draw.rectangle((bar_left, bar_top, bar_right, chart_bottom), fill=(255, 255, 255, 24))
+        draw.line((bar_left - 8, bar_top, bar_right + 8, bar_top), fill=color, width=5)
+        marker_x = (bar_left + bar_right) // 2
+        draw.rectangle((marker_x - 7, bar_top - 7, marker_x + 7, bar_top + 7), fill=color, outline=INK, width=2)
 
-    # Name
-    d.text((pad_x, text_top + 60), "Aneek Hait", font=f_name, fill=TEXT)
+    legend_font = ImageFont.truetype(FONT_BODY_BOLD, 15)
+    legend_items = (("ANALYSIS", CORAL), ("SYSTEMS", TEAL), ("ACTION", CHARTREUSE))
+    legend_x = chart_left
+    for label, color in legend_items:
+        draw.rectangle((legend_x, 532, legend_x + 10, 542), fill=color)
+        draw.text((legend_x + 18, 526), label, font=legend_font, fill=MUTED)
+        legend_x += 122
 
-    # Tagline (two lines)
-    tagline_y = text_top + 220
-    d.text((pad_x, tagline_y),
-           "From noisy datasets to",
-           font=f_tagline, fill=TEXT)
-    d.text((pad_x, tagline_y + 70),
-           "stories people can trust.",
-           font=f_tagline, fill=ACCENT_DEEP)
+    eyebrow_font = ImageFont.truetype(FONT_BODY_BOLD, 22)
+    name_font = ImageFont.truetype(FONT_DISPLAY_BOLD, 86)
+    statement_font = ImageFont.truetype(FONT_DISPLAY_BOLD, 48)
+    body_font = ImageFont.truetype(FONT_BODY, 23)
+    metric_font = ImageFont.truetype(FONT_BODY_BOLD, 19)
 
-    # Footer: URL on left, role line on right
-    foot_y = H - 70
-    d.text((pad_x, foot_y), "aneekhait.github.io",
-           font=f_url, fill=TEXT)
-    skills = "Tableau  ·  Power BI  ·  Python  ·  SQL"
-    sw = d.textlength(skills, font=f_footer)
-    d.text((W - pad_x - sw, foot_y + 1), skills,
-           font=f_footer, fill=MUTED)
+    left = 68
+    draw.rectangle((left, 72, left + 52, 77), fill=CORAL)
+    draw.text((left + 70, 58), "DATA & BI ANALYST", font=eyebrow_font, fill=MUTED)
+    draw.text((left, 116), "Aneek Hait", font=name_font, fill=PAPER)
 
-    # Circular profile photo — right side, vertically centered
-    photo_d = 360
-    photo = circular_photo(photo_d)
-    px = W - pad_x - photo_d
-    py = (H - photo_d) // 2 - 10
+    draw.text((left, 238), "Complex data, made", font=statement_font, fill=PAPER)
+    draw.text((left, 294), "clear enough to act on.", font=statement_font, fill=CHARTREUSE)
 
-    # Soft drop-shadow under photo
-    shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    sd = ImageDraw.Draw(shadow)
-    sd.ellipse((px + 8, py + 14, px + photo_d + 8, py + photo_d + 14),
-               fill=(72, 45, 11, 90))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(22))
-    img = Image.alpha_composite(img, shadow)
+    draw.text((left, 382), "Dashboards  /  Analysis  /  Reporting", font=body_font, fill=MUTED)
+    draw.text((left, 422), "Kolkata, India", font=body_font, fill=MUTED)
 
-    # White / surface ring around the photo
-    ring = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    rd = ImageDraw.Draw(ring)
-    ring_pad = 8
-    rd.ellipse((px - ring_pad, py - ring_pad,
-                px + photo_d + ring_pad, py + photo_d + ring_pad),
-               fill=(253, 247, 236, 255))
-    img = Image.alpha_composite(img, ring)
+    metric_y = 526
+    draw.line((left, metric_y - 24, 650, metric_y - 24), fill=(255, 255, 255, 70), width=1)
+    metrics = (("4+", "YEARS"), ("100+", "DATASETS"), ("7", "CREDENTIALS"))
+    metric_x = left
+    for value, label in metrics:
+        draw.text((metric_x, metric_y), value, font=metric_font, fill=PAPER)
+        draw.text((metric_x + 54, metric_y + 2), label, font=metric_font, fill=MUTED)
+        metric_x += 190
 
-    img.paste(photo, (px, py), photo)
-
-    return img.convert("RGB")
+    return image
 
 
 def main() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     card = draw_card()
     card.save(OUT, format="PNG", optimize=True)
-    size_kb = OUT.stat().st_size / 1024
-    print(f"Wrote {OUT.relative_to(ROOT)}  {W}x{H}  {size_kb:.1f} KB")
+    print(f"Wrote {OUT.relative_to(ROOT)} {card.width}x{card.height} {OUT.stat().st_size / 1024:.1f} KB")
 
 
 if __name__ == "__main__":
