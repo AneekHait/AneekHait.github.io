@@ -5,3 +5,9 @@ Thumbs.db
 .idea/
 
 *.log
+node_modules
+
+dist/
+.astro/
+.env
+.env.production

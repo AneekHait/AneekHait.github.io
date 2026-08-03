@@ -1,0 +1,109 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('notes', ({ data }) => !data.draft);
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+type Props = { entry: CollectionEntry<'notes'> };
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, description, pubDate, updatedDate, tags } = entry.data;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="note">
+    <header class="shell note__head">
+      <p class="note__meta mono">
+        <a href="/notes">Notes</a>
+        <span aria-hidden="true">/</span>
+        <FormattedDate date={pubDate} />
+      </p>
+      <h1>{title}</h1>
+      <p class="note__deck">{description}</p>
+      {
+        tags.length > 0 && (
+          <ul class="note__tags" aria-label="Tags">
+            {tags.map((tag) => (
+              <li class="mono">{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+      {updatedDate && <p class="mono note__updated">Updated <FormattedDate date={updatedDate} /></p>}
+    </header>
+
+    <div class="shell note__body">
+      <div class="prose"><Content /></div>
+    </div>
+
+    <div class="shell note__foot">
+      <a class="mono" href="/notes">← All notes</a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .note__head {
+    padding-block: var(--space-xl) var(--space-m);
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .note__meta {
+    display: flex;
+    gap: 0.5rem;
+    color: var(--accent);
+  }
+
+  .note__meta a {
+    text-decoration: none;
+  }
+
+  .note__head h1 {
+    font-size: var(--step-3);
+    margin-block-start: var(--space-s);
+    max-width: var(--measure);
+  }
+
+  .note__deck {
+    font-size: var(--step-1);
+    max-width: var(--measure);
+    margin-block-start: var(--space-xs);
+  }
+
+  .note__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-s);
+  }
+
+  .note__tags li {
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.1rem 0.45rem;
+  }
+
+  .note__updated {
+    margin-block-start: var(--space-xs);
+  }
+
+  .note__body {
+    padding-block: var(--space-l) var(--space-xl);
+  }
+
+  .note__foot {
+    padding-block: var(--space-m);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .note__foot a {
+    text-decoration: none;
+  }
+</style>

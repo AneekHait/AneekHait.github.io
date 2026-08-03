@@ -1,0 +1,237 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LedgerSection from '../components/LedgerSection.astro';
+import portrait from '../assets/images/contact-aneek.webp';
+import { site } from '../data/site';
+import { education } from '../data/experience';
+import { credentials } from '../data/credentials';
+---
+
+<BaseLayout
+  title="About"
+  description="How Aneek Hait approaches analysis, works with stakeholders, and what he is looking for next."
+>
+  <section class="intro">
+    <div class="shell intro__inner">
+      <div>
+        <p class="mono intro__eyebrow">About</p>
+        <h1>I care more about the question than the tool.</h1>
+        <div class="prose intro__prose">
+          <p>
+            I’m a Data &amp; BI Analyst at Accenture in Kolkata. Most of my work sits in the gap
+            between a business question that is vaguely worded and a dataset that was never
+            collected to answer it.
+          </p>
+        </div>
+      </div>
+      <figure class="portrait">
+        <Image src={portrait} alt="Aneek Hait" widths={[260, 500]} sizes="(min-width: 60rem) 18rem, 12rem" />
+        <figcaption class="mono">{site.location}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <LedgerSection index="01 / Method" title="How I think about problems.">
+    <div class="prose">
+      <p>
+        The first version of a request is almost never the real one. “Can you pull the numbers for
+        Q3” usually means someone has a decision to make and a hypothesis they have not said out
+        loud. I spend more time than most people expect on finding the decision behind the request,
+        because the decision determines what precision is actually required.
+      </p>
+      <p>
+        Once the question is clear I try to answer it in the least clever way that works. Clever
+        analysis is difficult to check, difficult to hand over, and difficult to defend six months
+        later when someone asks why a number moved. Where a descriptive breakdown will settle the
+        argument, I use a descriptive breakdown.
+      </p>
+      <p>
+        Where it will not, I state the uncertainty explicitly. Confidence intervals, effect sizes,
+        and cell counts go in the output rather than in a footnote — not to hedge, but because a
+        segment of eleven rows and a segment of eleven thousand should not look equally
+        authoritative on a dashboard.
+      </p>
+    </div>
+  </LedgerSection>
+
+  <LedgerSection index="02 / Practice" title="How I work with stakeholders.">
+    <div class="prose">
+      <p>
+        I write for the person who will act on the result, not for the person who will grade the
+        method. That means leading with what changed and what it implies, then making the working
+        available underneath for anyone who wants it. The analysis has to survive being read by
+        someone in a hurry.
+      </p>
+      <p>
+        I ask about data boundaries during scoping rather than at review. Finding out where customer
+        text is allowed to travel after the analysis is finished is an expensive way to learn it,
+        which is part of why I built a text-clustering tool that runs entirely on-device.
+      </p>
+      <p>
+        And I try to make work reproducible by default. Tests, pinned inputs, and committed
+        configuration are not engineering ceremony — they are what lets me still believe my own
+        numbers after I have forgotten how I produced them.
+      </p>
+    </div>
+  </LedgerSection>
+
+  <LedgerSection index="03 / Next" title="What I am looking for.">
+    <div class="prose">
+      <p>
+        Analysis, BI, and reporting work where rigor matters as much as clarity — ideally somewhere
+        the analyst is close enough to the decision to see whether the work changed anything.
+      </p>
+      <p>
+        I’m most useful on problems that are messy at the edges: unstructured text mixed with
+        structured records, reporting that has grown organically and needs rebuilding, or a
+        recurring question nobody has yet turned into a system.
+      </p>
+      <p>
+        <a href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">Get in touch on LinkedIn</a>
+        {site.resume && <> or <a href={site.resume}>download my résumé</a></>}.
+      </p>
+    </div>
+  </LedgerSection>
+
+  <LedgerSection index="04 / Credentials" title="Verified credentials.">
+    <ul class="credentials">
+      {
+        credentials.map((credential) => (
+          <li class="credential">
+            <a href={credential.url} target="_blank" rel="noopener noreferrer">
+              <span class="credential__title">{credential.title}</span>
+              <span class="mono credential__issuer">{credential.issuer} ↗</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3 class="group-heading mono">Education</h3>
+    <ol class="education">
+      {
+        education.map((item) => (
+          <li class="education__item">
+            <p class="mono">{item.period}</p>
+            <div>
+              <h4>{item.title}</h4>
+              <p class="mono education__org">{item.org}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </LedgerSection>
+</BaseLayout>
+
+<style>
+  .intro {
+    padding-block: var(--space-2xl) var(--space-l);
+  }
+
+  .intro__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-l);
+    align-items: start;
+  }
+
+  .intro__eyebrow {
+    color: var(--accent);
+  }
+
+  .intro h1 {
+    font-size: var(--step-3);
+    margin-block-start: var(--space-s);
+    max-width: 18ch;
+  }
+
+  .intro__prose {
+    margin-block-start: var(--space-m);
+  }
+
+  .portrait {
+    width: 12rem;
+  }
+
+  .portrait :global(img) {
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    filter: grayscale(1) contrast(1.05);
+  }
+
+  .portrait figcaption {
+    margin-block-start: var(--space-xs);
+  }
+
+  .credentials {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+
+  .credential a {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    padding-block: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+    text-decoration: none;
+  }
+
+  .credential__title {
+    color: var(--fg);
+  }
+
+  .credential a:hover .credential__title {
+    color: var(--accent);
+  }
+
+  .group-heading {
+    margin-block-start: var(--space-xl);
+    color: var(--fg-dim);
+  }
+
+  .education {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+
+  .education__item {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--space-m);
+    padding-block: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .education__item h4 {
+    font-size: var(--step-0);
+  }
+
+  .education__org {
+    margin-block-start: 0.15rem;
+  }
+
+  @media (max-width: 48rem) {
+    .intro {
+      padding-block: var(--space-xl) var(--space-m);
+    }
+
+    .intro__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .portrait {
+      width: 9rem;
+    }
+
+    .education__item {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
+    }
+  }
+</style>

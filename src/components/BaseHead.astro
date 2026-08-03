@@ -1,0 +1,94 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const { title, description = site.description, image = '/og.png', noindex = false } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const fullTitle = Astro.url.pathname === '/' ? `${site.name} | ${site.role}` : `${title} | ${site.name}`;
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  jobTitle: site.role,
+  worksFor: { '@type': 'Organization', name: 'Accenture' },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Kolkata',
+    addressCountry: 'India',
+  },
+  knowsAbout: [
+    'Data Analysis',
+    'Business Intelligence',
+    'Dashboard Design',
+    'Text Analysis',
+    'Tableau',
+    'Power BI',
+    'Python',
+    'SQL',
+  ],
+  sameAs: [site.socials.linkedin, site.socials.github],
+};
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<meta name="theme-color" content="#0a0b0a" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title={`${site.name} — Notes`} href={new URL('/rss.xml', Astro.site)} />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content="en_GB" />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${site.name}, ${site.role}. ${site.tagline}`} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+<script is:inline>
+  // Applied before first paint so the stored theme never flashes.
+  (() => {
+    const storageKey = 'aneek-theme';
+    let theme = 'dark';
+    try {
+      const stored = localStorage.getItem(storageKey);
+      if (stored === 'light' || stored === 'dark') {
+        theme = stored;
+      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        theme = 'light';
+      }
+    } catch {
+      /* localStorage unavailable; keep the dark default */
+    }
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    document
+      .querySelector("meta[name='theme-color']")
+      ?.setAttribute('content', theme === 'light' ? '#f4f2ea' : '#0a0b0a');
+  })();
+</script>

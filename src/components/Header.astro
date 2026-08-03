@@ -1,0 +1,109 @@
+---
+import { nav, site } from '../data/site';
+import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">
+      <span class="brand__mark mono" aria-hidden="true">AH</span>
+      <span class="brand__name">{site.name}</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      {
+        nav.map((item) => (
+          <a href={item.href} class:list={['site-nav__link', 'mono', { 'is-active': isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+      {site.resume && <a class="site-nav__link mono" href={site.resume}>Résumé</a>}
+    </nav>
+
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-block-end: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+    padding-block: 0.85rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    margin-inline-end: auto;
+  }
+
+  .brand__mark {
+    color: var(--accent-ink);
+    background: var(--accent);
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+  }
+
+  .brand__name {
+    color: var(--fg);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+  }
+
+  .site-nav__link {
+    text-decoration: none;
+    color: var(--fg-dim);
+    position: relative;
+    padding-block: 0.2rem;
+  }
+
+  .site-nav__link:hover,
+  .site-nav__link.is-active {
+    color: var(--accent);
+  }
+
+  .site-nav__link.is-active::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -0.15rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  @media (max-width: 34rem) {
+    .brand__name {
+      display: none;
+    }
+
+    .site-header__inner {
+      gap: 0.75rem;
+    }
+  }
+</style>

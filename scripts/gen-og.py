@@ -1,4 +1,4 @@
-"""Generate the 1200x630 Open Graph card at assets/og.png.
+"""Generate the 1200x630 Open Graph card at public/og.png.
 
 Run from the repository root:
     python scripts/gen-og.py
@@ -10,84 +10,83 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "assets" / "og.png"
+OUT = ROOT / "public" / "og.png"
 
 WIDTH = 1200
 HEIGHT = 630
 
-INK = (21, 23, 22)
-PAPER = (243, 240, 232)
-MUTED = (194, 196, 188)
-CORAL = (240, 100, 69)
-TEAL = (25, 167, 155)
-CHARTREUSE = (199, 223, 62)
-GRID = (255, 255, 255, 24)
+# Terminal Ledger palette, kept in sync with src/styles/tokens.css.
+BG = (10, 11, 10)
+FG = (230, 233, 225)
+FG_MUTED = (168, 173, 161)
+FG_DIM = (118, 123, 112)
+RULE = (38, 42, 36)
+ACCENT = (255, 176, 0)
 
-FONT_DISPLAY_BOLD = "C:/Windows/Fonts/georgiab.ttf"
-FONT_BODY_BOLD = "C:/Windows/Fonts/segoeuib.ttf"
-FONT_BODY = "C:/Windows/Fonts/segoeui.ttf"
+# Candidates are tried in order; the first file that exists wins.
+SANS_BOLD_CANDIDATES = (
+    "C:/Windows/Fonts/segoeuib.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+)
+SANS_CANDIDATES = (
+    "C:/Windows/Fonts/segoeui.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/System/Library/Fonts/Supplemental/Arial.ttf",
+)
+MONO_CANDIDATES = (
+    "C:/Windows/Fonts/consola.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+    "/System/Library/Fonts/Menlo.ttc",
+)
+
+
+def load_font(candidates: tuple[str, ...], size: int) -> ImageFont.FreeTypeFont:
+    for path in candidates:
+        if Path(path).exists():
+            return ImageFont.truetype(path, size)
+    raise FileNotFoundError(
+        f"No usable font found. Tried: {', '.join(candidates)}. "
+        "Add a path for this platform to the candidate list."
+    )
 
 
 def draw_card() -> Image.Image:
-    image = Image.new("RGB", (WIDTH, HEIGHT), INK)
-    draw = ImageDraw.Draw(image, "RGBA")
+    image = Image.new("RGB", (WIDTH, HEIGHT), BG)
+    draw = ImageDraw.Draw(image)
 
-    for x in range(700, WIDTH, 48):
-        draw.line((x, 0, x, HEIGHT), fill=GRID, width=1)
-    for y in range(0, HEIGHT, 48):
-        draw.line((700, y, WIDTH, y), fill=GRID, width=1)
+    mono_sm = load_font(MONO_CANDIDATES, 20)
+    mono_xs = load_font(MONO_CANDIDATES, 17)
+    name_font = load_font(SANS_BOLD_CANDIDATES, 96)
+    tagline_font = load_font(SANS_BOLD_CANDIDATES, 46)
+    body_font = load_font(SANS_CANDIDATES, 24)
 
-    draw.rectangle((1178, 0, 1200, 226), fill=CHARTREUSE)
-    draw.rectangle((822, 608, 1200, 630), fill=CORAL)
-    draw.text((742, 48), "SIGNAL MAP / 2026", font=ImageFont.truetype(FONT_BODY_BOLD, 18), fill=MUTED)
-    chart_left, chart_top, chart_right, chart_bottom = 756, 116, 1138, 500
-    draw.line((chart_left, chart_top, chart_left, chart_bottom), fill=(255, 255, 255, 105), width=2)
-    draw.line((chart_left, chart_bottom, chart_right, chart_bottom), fill=(255, 255, 255, 105), width=2)
+    left = 72
+    right = WIDTH - 72
 
-    bar_heights = (108, 214, 166, 292, 246, 356)
-    bar_colors = (CORAL, TEAL, CHARTREUSE, CORAL, TEAL, CHARTREUSE)
-    for index, (bar_height, color) in enumerate(zip(bar_heights, bar_colors)):
-        bar_left = chart_left + 34 + index * 56
-        bar_right = bar_left + 28
-        bar_top = chart_bottom - bar_height
-        draw.rectangle((bar_left, bar_top, bar_right, chart_bottom), fill=(255, 255, 255, 24))
-        draw.line((bar_left - 8, bar_top, bar_right + 8, bar_top), fill=color, width=5)
-        marker_x = (bar_left + bar_right) // 2
-        draw.rectangle((marker_x - 7, bar_top - 7, marker_x + 7, bar_top + 7), fill=color, outline=INK, width=2)
+    draw.rectangle((0, 0, WIDTH, 6), fill=ACCENT)
 
-    legend_font = ImageFont.truetype(FONT_BODY_BOLD, 15)
-    legend_items = (("ANALYSIS", CORAL), ("SYSTEMS", TEAL), ("ACTION", CHARTREUSE))
-    legend_x = chart_left
-    for label, color in legend_items:
-        draw.rectangle((legend_x, 532, legend_x + 10, 542), fill=color)
-        draw.text((legend_x + 18, 526), label, font=legend_font, fill=MUTED)
-        legend_x += 122
+    draw.text((left, 66), "DATA & BI ANALYST", font=mono_sm, fill=ACCENT)
+    draw.text((right - 200, 66), "KOLKATA, INDIA", font=mono_sm, fill=FG_DIM)
+    draw.line((left, 108, right, 108), fill=RULE, width=1)
 
-    eyebrow_font = ImageFont.truetype(FONT_BODY_BOLD, 22)
-    name_font = ImageFont.truetype(FONT_DISPLAY_BOLD, 86)
-    statement_font = ImageFont.truetype(FONT_DISPLAY_BOLD, 48)
-    body_font = ImageFont.truetype(FONT_BODY, 23)
-    metric_font = ImageFont.truetype(FONT_BODY_BOLD, 19)
+    draw.text((left, 142), "Aneek Hait", font=name_font, fill=FG)
+    draw.text((left, 272), "Complex data, made", font=tagline_font, fill=FG)
+    draw.text((left, 328), "clear enough to act on.", font=tagline_font, fill=ACCENT)
 
-    left = 68
-    draw.rectangle((left, 72, left + 52, 77), fill=CORAL)
-    draw.text((left + 70, 58), "DATA & BI ANALYST", font=eyebrow_font, fill=MUTED)
-    draw.text((left, 116), "Aneek Hait", font=name_font, fill=PAPER)
+    # Static rendering of the hero's blinking caret.
+    caret_x = left + draw.textlength("clear enough to act on.", font=tagline_font) + 12
+    draw.rectangle((caret_x, 330, caret_x + 13, 372), fill=ACCENT)
 
-    draw.text((left, 238), "Complex data, made", font=statement_font, fill=PAPER)
-    draw.text((left, 294), "clear enough to act on.", font=statement_font, fill=CHARTREUSE)
+    draw.text((left, 418), "Dashboards / Analysis / Reporting", font=body_font, fill=FG_MUTED)
 
-    draw.text((left, 382), "Dashboards  /  Analysis  /  Reporting", font=body_font, fill=MUTED)
-    draw.text((left, 422), "Kolkata, India", font=body_font, fill=MUTED)
-
-    metric_y = 526
-    draw.line((left, metric_y - 24, 650, metric_y - 24), fill=(255, 255, 255, 70), width=1)
-    metrics = (("4+", "YEARS"), ("100+", "DATASETS"), ("7", "CREDENTIALS"))
-    metric_x = left
-    for value, label in metrics:
-        draw.text((metric_x, metric_y), value, font=metric_font, fill=PAPER)
-        draw.text((metric_x + 54, metric_y + 2), label, font=metric_font, fill=MUTED)
-        metric_x += 190
+    draw.line((left, 496, right, 496), fill=RULE, width=1)
+    entries = (("01", "SELECTED WORK"), ("02", "EXPERIENCE"), ("03", "TOOLKIT"), ("04", "NOTES"))
+    column_x = left
+    for index, label in entries:
+        draw.text((column_x, 524), index, font=mono_xs, fill=ACCENT)
+        draw.text((column_x, 552), label, font=mono_xs, fill=FG_DIM)
+        column_x += 235
 
     return image
 

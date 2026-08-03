@@ -1,0 +1,73 @@
+/* Terminal Ledger design tokens. Dark is the default; light is opt-in via [data-theme="light"]. */
+
+:root {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', 'Consolas', monospace;
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1.03rem);
+  --step-1: clamp(1.13rem, 1.06rem + 0.35vw, 1.35rem);
+  --step-2: clamp(1.4rem, 1.24rem + 0.8vw, 1.95rem);
+  --step-3: clamp(1.8rem, 1.45rem + 1.7vw, 3rem);
+  --step-4: clamp(2.3rem, 1.6rem + 3.4vw, 4.75rem);
+
+  --space-2xs: 0.35rem;
+  --space-xs: 0.65rem;
+  --space-s: 1rem;
+  --space-m: 1.6rem;
+  --space-l: 2.6rem;
+  --space-xl: 4.2rem;
+  --space-2xl: 6.5rem;
+
+  --measure: 68ch;
+  --shell: 76rem;
+  --radius: 3px;
+
+  --ledger-index: 6.5rem;
+  --transition: 160ms ease;
+}
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0a0b0a;
+  --bg-elev: #101210;
+  --bg-inset: #161815;
+
+  --rule: #262a24;
+  --rule-strong: #3c4238;
+
+  --fg: #e6e9e1;
+  --fg-muted: #a8ada1;
+  --fg-dim: #767b70;
+
+  --accent: #ffb000;
+  --accent-ink: #0a0b0a;
+  --accent-soft: rgba(255, 176, 0, 0.13);
+
+  --data: #3fd0bd;
+  --selection: rgba(255, 176, 0, 0.28);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f4f2ea;
+  --bg-elev: #fbfaf5;
+  --bg-inset: #eceadf;
+
+  --rule: #dbd7c9;
+  --rule-strong: #b4af9d;
+
+  --fg: #1a1c16;
+  --fg-muted: #4a4d43;
+  --fg-dim: #6e7266;
+
+  --accent: #8a5300;
+  --accent-ink: #fbfaf5;
+  --accent-soft: rgba(138, 83, 0, 0.1);
+
+  --data: #0f7a6d;
+  --selection: rgba(138, 83, 0, 0.2);
+}

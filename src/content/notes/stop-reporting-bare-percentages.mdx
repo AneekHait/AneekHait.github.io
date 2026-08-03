@@ -1,0 +1,43 @@
+---
+title: Stop reporting bare percentages
+description: A survival rate of 75% from four passengers and from four hundred are not the same number. Wilson intervals make the difference visible.
+pubDate: 2026-03-14
+tags: ['statistics', 'reporting']
+---
+
+Somewhere in every dashboard there is a segment with eleven rows in it, and next to it a conversion
+rate quoted to one decimal place. The decimal place is the tell. It signals a precision the data
+cannot support, and stakeholders read it exactly as precisely as it is written.
+
+## The problem with the obvious interval
+
+The textbook fix is the normal-approximation interval — take the proportion, add and subtract
+1.96 standard errors, done. It fails in precisely the situations where you most need it.
+
+At proportions near 0 or 1 it produces bounds outside `[0, 1]`, which is nonsense on its face. Worse,
+at small sample sizes its actual coverage is nowhere near the 95% claimed. And small samples near
+the extremes are not an edge case in business reporting — they are the churned-customer segment, the
+failed-payment cohort, the one region that had a bad quarter.
+
+## What Wilson does differently
+
+The Wilson score interval inverts the score test rather than assuming normality of the estimate. In
+practice that means it is asymmetric, it stays inside `[0, 1]`, and its coverage holds up at the
+sample sizes you actually have.
+
+For 3 successes out of 4, the naive interval runs past 100%. Wilson gives you something like 30% to
+95% — wide, awkward, and honest. That width is the finding. It is telling you the segment cannot
+support a decision on its own.
+
+## The part that is not statistical
+
+Adopting Wilson intervals is a two-line change. Getting them into a report is not.
+
+The resistance is that intervals look like hedging. A single number reads as an answer; a range
+reads as the analyst declining to commit. The reframe that works is to lead with the decision rather
+than the estimate: *this segment is somewhere between materially worse and roughly average, so we
+cannot act on it yet — here is what we would need to.* That is not hedging, that is the actual state
+of knowledge.
+
+I used this throughout the [Titanic analysis](/work/titanic-survival-analysis/), and several
+sub-claims that circulate about that dataset simply do not survive contact with an interval.

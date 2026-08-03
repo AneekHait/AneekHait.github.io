@@ -1,0 +1,69 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <p class="site-footer__id">
+      <strong>{site.name}</strong>
+      <span class="mono">{site.role}</span>
+    </p>
+    <p class="mono">{site.location}</p>
+    <ul class="site-footer__links">
+      <li><a class="mono" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+      <li><a class="mono" href={site.socials.github} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+      <li><a class="mono" href="/rss.xml">RSS</a></li>
+      {site.resume && <li><a class="mono" href={site.resume}>Résumé</a></li>}
+    </ul>
+    <p class="mono site-footer__year">© {year}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-block-start: auto;
+    border-block-start: 1px solid var(--rule);
+    padding-block: var(--space-m);
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-s) var(--space-m);
+  }
+
+  .site-footer__id {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .site-footer__id strong {
+    color: var(--fg);
+  }
+
+  .site-footer__links {
+    display: flex;
+    gap: var(--space-s);
+    list-style: none;
+    padding: 0;
+    margin-inline-start: auto;
+    flex-wrap: wrap;
+  }
+
+  .site-footer__links a {
+    text-decoration: none;
+  }
+
+  .site-footer__links a:hover {
+    color: var(--accent);
+  }
+
+  .site-footer__year {
+    width: 100%;
+    padding-block-start: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+title: The most-analysed dataset is still misread
+description: Everyone knows the Titanic headline. Far fewer have looked at what happens when you stratify class and sex jointly instead of marginally.
+pubDate: 2026-05-02
+tags: ['statistics', 'analysis']
+---
+
+"Women and children first" is the summary of the Titanic dataset that everyone arrives with. It is
+also broadly correct, which is what makes the dataset such a good teaching case — the failure modes
+show up in the *supporting* claims, not the headline.
+
+## Marginal reading invents an effect
+
+Look at survival by class and you get a clean monotonic story: first class fared best, third worst.
+Look at survival by sex and you get an enormous effect. Both are true marginally.
+
+The trap is treating them as two independent findings and then adding them together in the write-up.
+Class and sex are not independent in this table, and the joint distribution is where the actual
+structure is. Once stratified, a large part of what looked like an independent class effect is
+redistributed — class matters enormously, but mostly as a modifier of the sex effect rather than
+alongside it.
+
+## Small cells, loud claims
+
+Stratifying is what exposes the second problem. A two-way split turns a 1,309-row table into cells,
+and some of those cells are small. The confidence intervals on them are wide enough that several
+frequently repeated sub-claims about specific class-and-sex combinations are not distinguishable
+from each other.
+
+They still get stated as fact, because a cell in a heatmap looks equally authoritative whether it
+holds four hundred people or eleven.
+
+## Why it generalises
+
+Nothing about this is specific to 1912. Substitute *channel* for class and *segment* for sex and it
+is the same reporting failure that shows up in a marketing readout: two marginal breakdowns,
+presented as independent drivers, with no interval on either, and a recommendation that depends
+entirely on a cell nobody checked the size of.
+
+The transferable habit is small: before writing the sentence, look at the joint table and look at
+the cell counts. The full working is in the [case study](/work/titanic-survival-analysis/).

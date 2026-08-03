@@ -1,61 +1,106 @@
-# Aneek Hait - Data & BI Analyst Portfolio
+# Aneek Hait — Data & BI Analyst Portfolio
 
-A static, responsive portfolio focused on selected analytics products, professional impact, experience, and verified credentials.
+A static, content-driven portfolio built with Astro. It covers selected analytics work,
+experience, toolkit, written notes, and verified credentials.
+
+Live site: <https://aneekhait.github.io>
 
 ## Stack
 
-- Semantic HTML5
-- Custom CSS with light/dark design tokens and responsive editorial layouts
-- Vanilla JavaScript for theme persistence, progressive reveals, counters, section tracking, and scroll controls
-- Google Fonts: Fraunces, Space Grotesk, and IBM Plex Mono
-- Pillow for deterministic Open Graph image generation
+- **Astro** — component-based, zero-JS-by-default, static output
+- **MDX** content collections for case studies and notes, validated with Zod schemas
+- **`@astrojs/sitemap`** and **`@astrojs/rss`** for `/sitemap-index.xml` and `/rss.xml`
+- **Custom CSS design system** ("Terminal Ledger") — dark-first tokens, fluid type scale,
+  no CSS framework
+- **Fontsource** self-hosted fonts: Inter Variable (UI) and IBM Plex Mono (labels, data)
+- **Pillow** for deterministic Open Graph image generation
+- **GitHub Actions** for build and deploy to GitHub Pages
+
+## Requirements
+
+Node.js 20 or later (developed against v24 LTS) and npm.
+
+> **Windows PowerShell note:** the default execution policy blocks `npm.ps1`. Use
+> `npm.cmd` instead of `npm`, e.g. `npm.cmd run dev`.
+
+## Commands
+
+Run from the repository root:
+
+| Command | Action |
+| --- | --- |
+| `npm install` | Install dependencies |
+| `npm run dev` | Start the dev server at `http://localhost:4321` |
+| `npm run build` | Build the static site to `dist/` |
+| `npm run preview` | Serve the built `dist/` locally |
+| `npm run check` | Type-check `.astro`, `.ts`, and content schemas |
 
 ## Project Structure
 
 ```text
 .
-|-- index.html
-|-- assets/
-|   |-- css/portfolio.css
-|   |-- js/portfolio.js
-|   |-- images/
-|   |   |-- contact-aneek.webp
-|   |   |-- project-text-analyzer.webp
-|   |   |-- project-titanic-joint.webp
-|   |   |-- project-titanic-odds.webp
-|   |   `-- IMAGEN-BRIEF.md
-|   |-- pp.png
-|   `-- og.png
+|-- astro.config.mjs
+|-- src/
+|   |-- assets/images/          # Optimised at build time by astro:assets
+|   |-- components/             # BaseHead, Header, Footer, cards, ThemeToggle
+|   |-- content/
+|   |   |-- work/*.mdx          # Case studies
+|   |   `-- notes/*.mdx         # Written notes
+|   |-- content.config.ts       # Collection schemas
+|   |-- data/                   # site, experience, credentials, toolkit
+|   |-- layouts/BaseLayout.astro
+|   |-- pages/
+|   |   |-- index.astro
+|   |   |-- about.astro
+|   |   |-- work/[...id].astro
+|   |   |-- notes/[...id].astro
+|   |   |-- 404.astro
+|   |   `-- rss.xml.ts
+|   `-- styles/                 # tokens.css, global.css
+|-- public/                     # Copied verbatim: og.png, pp.png, robots.txt,
+|                               # favicon.svg, resume PDF, Search Console file
 `-- scripts/gen-og.py
 ```
 
-## Local Preview
+## Adding Content
 
-No build step is required. From the repository root:
+**A case study** — create `src/content/work/<slug>.mdx`. Required frontmatter: `title`,
+`deck`, `order`, `year`, `role`. Set `status: planned` for work that has not shipped;
+planned entries render as stubs, are excluded from the homepage, and must never carry
+invented metrics or screenshots. `shipped` entries get a detail page at `/work/<slug>/`.
 
-```powershell
-python -m http.server 8000
-```
+**A note** — create `src/content/notes/<slug>.mdx` with `title`, `description`, and
+`pubDate`. Set `draft: true` to keep it out of the build.
 
-Open `http://localhost:8000/`. The site can also be opened directly from `index.html`, but a local server better matches GitHub Pages behavior.
+Site-wide copy (name, role, tagline, "now" line, social links) lives in
+`src/data/site.ts`. Experience, credentials, and toolkit lists live alongside it.
 
-## Image Workflow
+## Design Tokens
 
-The website never calls Imagen at runtime and contains no API credentials. The hero is intentionally not portrait-led: its default visual is a responsive CSS signal map built from the portfolio's analysis, systems, and action themes. `assets/images/IMAGEN-BRIEF.md` defines an optional non-photographic data-studio texture that can be evaluated as a subtle supporting layer without replacing the HTML visualization or becoming the primary content.
+All colour, type, and spacing values are defined once in `src/styles/tokens.css` under
+`:root` (dark) and `[data-theme='light']`. Theme choice persists in `localStorage` under
+the key `aneek-theme` and is applied by an inline script in `BaseHead.astro` to avoid a
+flash of the wrong theme.
 
-Project imagery is copied from Aneek's public project repositories and committed locally so the portfolio does not hotlink assets or invent analytical interfaces.
+## Open Graph Card
 
-Regenerate the social card after changing positioning copy or the signal-map art direction:
+The site never calls an image-generation API at runtime and contains no credentials.
+Regenerate the social card after changing positioning copy:
 
 ```powershell
 python scripts/gen-og.py
 ```
 
-This writes a deterministic, non-portrait `1200 x 630` card to `assets/og.png`; all card text and chart geometry are rendered by Pillow rather than image generation.
+This writes a deterministic `1200 x 630` card to `public/og.png` using the same palette as
+`tokens.css`.
 
-## Live Site
+## Deployment
 
-https://aneekhait.github.io
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds with
+`withastro/action` and publishes `dist/` via `actions/deploy-pages`.
+
+**One-time setup:** in the repository settings under *Pages*, set **Source** to
+**GitHub Actions**.
 
 ## License
 

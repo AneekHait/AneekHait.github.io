@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  entry: CollectionEntry<'notes'>;
+}
+
+const { entry } = Astro.props;
+---
+
+<article class="note-card">
+  <FormattedDate date={entry.data.pubDate} class="note-card__date mono" />
+  <h3 class="note-card__title"><a href={`/notes/${entry.id}/`}>{entry.data.title}</a></h3>
+  <p>{entry.data.description}</p>
+</article>
+
+<style>
+  .note-card {
+    position: relative;
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-m);
+    border-block-start: 1px solid var(--rule);
+    transition: border-color var(--transition);
+  }
+
+  .note-card:hover {
+    border-block-start-color: var(--accent);
+  }
+
+  .note-card__title {
+    font-size: var(--step-1);
+  }
+
+  .note-card__title a {
+    text-decoration: none;
+  }
+
+  .note-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .note-card p {
+    max-width: var(--measure);
+  }
+</style>

@@ -1,0 +1,91 @@
+---
+---
+
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="true">
+  <span class="theme-toggle__label mono" aria-hidden="true">DARK</span>
+  <span class="theme-toggle__track" aria-hidden="true"><span class="theme-toggle__dot"></span></span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    color: var(--fg-dim);
+    transition: border-color var(--transition), color var(--transition);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .theme-toggle__label {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: inherit;
+  }
+
+  .theme-toggle__track {
+    position: relative;
+    width: 1.7rem;
+    height: 0.55rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+  }
+
+  .theme-toggle__dot {
+    position: absolute;
+    top: 50%;
+    left: 1px;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-50%);
+    transition: left var(--transition);
+  }
+
+  :global([data-theme='light']) .theme-toggle__dot {
+    left: calc(100% - 0.4rem - 1px);
+  }
+</style>
+
+<script>
+  const storageKey = 'aneek-theme';
+  const toggle = document.getElementById('themeToggle');
+  const themeMeta = document.querySelector("meta[name='theme-color']");
+  const label = toggle?.querySelector('.theme-toggle__label');
+
+  const apply = (theme: string, store: boolean) => {
+    const next = theme === 'light' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    document.documentElement.style.colorScheme = next;
+    themeMeta?.setAttribute('content', next === 'light' ? '#f4f2ea' : '#0a0b0a');
+
+    if (toggle) {
+      toggle.setAttribute('aria-label', `Switch to ${next === 'light' ? 'dark' : 'light'} theme`);
+      toggle.setAttribute('aria-pressed', String(next === 'dark'));
+    }
+    if (label) label.textContent = next.toUpperCase();
+
+    if (store) {
+      try {
+        localStorage.setItem(storageKey, next);
+      } catch {
+        /* preference simply will not persist */
+      }
+    }
+  };
+
+  apply(document.documentElement.dataset.theme ?? 'dark', false);
+
+  toggle?.addEventListener('click', () => {
+    apply(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light', true);
+  });
+</script>

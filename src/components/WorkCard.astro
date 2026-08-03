@@ -1,0 +1,134 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'work'>;
+}
+
+const { entry } = Astro.props;
+const { title, deck, year, tags, metrics, status } = entry.data;
+const planned = status === 'planned';
+---
+
+<article class:list={['work-card', { 'work-card--planned': planned }]}>
+  <p class="work-card__meta mono">
+    <span>{year}</span>
+    {planned && <span class="work-card__flag">Planned</span>}
+  </p>
+
+  <h3 class="work-card__title">
+    {planned ? title : <a href={`/work/${entry.id}/`}>{title}</a>}
+  </h3>
+
+  <p class="work-card__deck">{deck}</p>
+
+  {
+    metrics.length > 0 && (
+      <dl class="work-card__metrics">
+        {metrics.map((metric) => (
+          <div>
+            <dt class="mono">{metric.label}</dt>
+            <dd>{metric.value}</dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+
+  {
+    tags.length > 0 && (
+      <ul class="work-card__tags" aria-label="Technologies">
+        {tags.map((tag) => (
+          <li class="mono">{tag}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .work-card {
+    display: grid;
+    gap: var(--space-xs);
+    padding-block: var(--space-m);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .work-card__meta {
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+  }
+
+  .work-card__flag {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 0 0.35rem;
+  }
+
+  .work-card__title {
+    font-size: var(--step-2);
+  }
+
+  .work-card__title a {
+    text-decoration: none;
+  }
+
+  /* Keeps the whole row clickable without nesting interactive elements. */
+  .work-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .work-card {
+    position: relative;
+    transition: border-color var(--transition);
+  }
+
+  .work-card:hover:not(.work-card--planned) {
+    border-block-start-color: var(--accent);
+  }
+
+  .work-card__deck {
+    max-width: var(--measure);
+  }
+
+  .work-card--planned {
+    color: var(--fg-dim);
+  }
+
+  .work-card--planned .work-card__title {
+    color: var(--fg-muted);
+  }
+
+  .work-card__metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .work-card__metrics dd {
+    color: var(--fg);
+    font-size: var(--step-1);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .work-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-2xs);
+  }
+
+  .work-card__tags li {
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.1rem 0.45rem;
+  }
+</style>

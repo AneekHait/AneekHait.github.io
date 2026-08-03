@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LedgerSection from '../../components/LedgerSection.astro';
+import WorkCard from '../../components/WorkCard.astro';
+
+const all = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
+const shipped = all.filter((entry) => entry.data.status === 'shipped');
+const planned = all.filter((entry) => entry.data.status === 'planned');
+---
+
+<BaseLayout
+  title="Work"
+  description="Selected analytics and data projects by Aneek Hait, written up as full case studies."
+>
+  <LedgerSection
+    index="Work"
+    title="Selected work."
+    lead="Each case study follows the same structure: context, question, method, findings, and what I would do next."
+  >
+    {shipped.map((entry) => <WorkCard entry={entry} />)}
+
+    {
+      planned.length > 0 && (
+        <>
+          <h3 class="group-heading mono">In progress</h3>
+          {planned.map((entry) => (
+            <WorkCard entry={entry} />
+          ))}
+        </>
+      )
+    }
+  </LedgerSection>
+</BaseLayout>
+
+<style>
+  .group-heading {
+    margin-block-start: var(--space-xl);
+    color: var(--fg-dim);
+  }
+</style>

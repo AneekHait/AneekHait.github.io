@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" noindex>
+  <section class="shell notfound">
+    <p class="mono notfound__code">404</p>
+    <h1>No record at this path.</h1>
+    <p class="notfound__lead">The page you asked for does not exist, or it moved during the site rebuild.</p>
+    <div class="notfound__actions">
+      <a class="button button--primary" href="/">Home</a>
+      <a class="button" href="/work">Work</a>
+      <a class="button" href="/notes">Notes</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    padding-block: var(--space-2xl);
+  }
+
+  .notfound__code {
+    color: var(--accent);
+  }
+
+  .notfound h1 {
+    font-size: var(--step-3);
+    margin-block-start: var(--space-s);
+  }
+
+  .notfound__lead {
+    margin-block-start: var(--space-s);
+    max-width: var(--measure);
+  }
+
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-m);
+  }
+</style>

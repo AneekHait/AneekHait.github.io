@@ -1,0 +1,286 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LedgerSection from '../components/LedgerSection.astro';
+import WorkCard from '../components/WorkCard.astro';
+import NoteCard from '../components/NoteCard.astro';
+import { site } from '../data/site';
+import { experience } from '../data/experience';
+import { toolkit } from '../data/toolkit';
+
+const work = (await getCollection('work', ({ data }) => !data.draft && data.status === 'shipped')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 2);
+---
+
+<BaseLayout title="Home">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="shell hero__inner">
+      <p class="hero__eyebrow mono">
+        <span>{site.role}</span>
+        <span aria-hidden="true">/</span>
+        <span>{site.location}</span>
+      </p>
+      <h1 id="hero-title">{site.name}</h1>
+      <p class="hero__tagline">{site.tagline}<span class="caret" aria-hidden="true"></span></p>
+      <p class="hero__summary">
+        I turn structured and unstructured data into rigorous analysis, useful dashboards, and
+        stakeholder stories that move decisions forward.
+      </p>
+      <div class="hero__actions">
+        <a class="button button--primary" href="/work">Selected work</a>
+        <a class="button" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+
+      <dl class="now">
+        <dt class="mono">Now</dt>
+        <dd>{site.now}</dd>
+      </dl>
+    </div>
+  </section>
+
+  <LedgerSection
+    index="01 / Work"
+    id="work"
+    title="Analysis that ships as something useful."
+    lead="Independent projects, from a private desktop NLP workflow to a reproducible statistical study."
+  >
+    {work.map((entry) => <WorkCard entry={entry} />)}
+    <p class="section-more"><a class="mono" href="/work">All work →</a></p>
+  </LedgerSection>
+
+  <LedgerSection
+    index="02 / Experience"
+    id="experience"
+    title="Four years closer to the decision."
+    lead="From software delivery foundations to business-facing analysis, reporting, and data storytelling."
+  >
+    <ol class="roles">
+      {
+        experience.map((role) => (
+          <li class="role">
+            <p class="role__period mono">{role.period}</p>
+            <div>
+              <h3 class="role__title">
+                {role.title}
+                {role.qualifier && <span class="mono"> ({role.qualifier})</span>}
+              </h3>
+              <p class="role__org mono">{role.org}</p>
+              <ul class="role__points">
+                {role.points.map((point) => (
+                  <li>{point}</li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </LedgerSection>
+
+  <LedgerSection
+    index="03 / Toolkit"
+    id="toolkit"
+    title="Tools follow the question."
+    lead="A practical stack for finding patterns, checking the work, and making the result legible."
+  >
+    <dl class="toolkit">
+      {
+        toolkit.map((group) => (
+          <div class="toolkit__group">
+            <dt class="mono">{group.label}</dt>
+            <dd>{group.items.join(' · ')}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </LedgerSection>
+
+  <LedgerSection
+    index="04 / Notes"
+    id="notes"
+    title="Working notes on method."
+    lead="Short pieces on the statistics and habits behind the analysis."
+  >
+    {notes.map((entry) => <NoteCard entry={entry} />)}
+    <p class="section-more"><a class="mono" href="/notes">All notes →</a></p>
+  </LedgerSection>
+
+  <LedgerSection index="05 / Contact" id="contact" title="Bring me the messy question.">
+    <p class="contact__lead">
+      I’m interested in analysis, BI, and reporting work where rigor matters as much as clarity.
+    </p>
+    <div class="hero__actions">
+      <a class="button button--primary" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
+        Connect on LinkedIn
+      </a>
+      <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">
+        Browse the code
+      </a>
+      {site.resume && <a class="button" href={site.resume}>Download résumé</a>}
+    </div>
+  </LedgerSection>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .hero__eyebrow {
+    display: flex;
+    gap: 0.5rem;
+    color: var(--accent);
+  }
+
+  .hero h1 {
+    font-size: var(--step-4);
+    margin-block-start: var(--space-s);
+  }
+
+  .hero__tagline {
+    font-size: var(--step-2);
+    color: var(--fg);
+    margin-block-start: var(--space-s);
+    max-width: 22ch;
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0.55ch;
+    height: 1em;
+    background: var(--accent);
+    margin-inline-start: 0.25ch;
+    vertical-align: -0.12em;
+    animation: blink 1.1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .hero__summary {
+    margin-block-start: var(--space-m);
+    max-width: var(--measure);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-block-start: var(--space-m);
+  }
+
+  .now {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: var(--ledger-index) minmax(0, 1fr);
+    gap: var(--space-m);
+  }
+
+  .now dt {
+    color: var(--accent);
+  }
+
+  .now dd {
+    margin: 0;
+    max-width: var(--measure);
+  }
+
+  .section-more {
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .section-more a {
+    text-decoration: none;
+  }
+
+  .roles {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+
+  .role {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--space-m);
+    padding-block: var(--space-m);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .role__period {
+    color: var(--fg-dim);
+  }
+
+  .role__title {
+    font-size: var(--step-1);
+  }
+
+  .role__title span {
+    color: var(--fg-dim);
+    text-transform: none;
+  }
+
+  .role__org {
+    margin-block-start: 0.15rem;
+    color: var(--accent);
+  }
+
+  .role__points {
+    margin-block-start: var(--space-xs);
+    display: grid;
+    gap: 0.3rem;
+    max-width: var(--measure);
+  }
+
+  .toolkit {
+    display: grid;
+  }
+
+  .toolkit__group {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: var(--space-m);
+    padding-block: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .toolkit__group dt {
+    color: var(--fg);
+  }
+
+  .toolkit__group dd {
+    margin: 0;
+    max-width: var(--measure);
+  }
+
+  .contact__lead {
+    font-size: var(--step-1);
+    max-width: var(--measure);
+  }
+
+  @media (max-width: 48rem) {
+    .hero {
+      padding-block: var(--space-xl) var(--space-l);
+    }
+
+    .now,
+    .role,
+    .toolkit__group {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
+    }
+  }
+</style>
