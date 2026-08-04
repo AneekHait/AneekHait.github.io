@@ -10,7 +10,7 @@ const { entry } = Astro.props;
 ---
 
 <article class="note-card">
-  <FormattedDate date={entry.data.pubDate} class="note-card__date mono" />
+  <FormattedDate date={entry.data.pubDate} class="note-card__date label" />
   <h3 class="note-card__title"><a href={`/notes/${entry.id}/`}>{entry.data.title}</a></h3>
   <p>{entry.data.description}</p>
 </article>

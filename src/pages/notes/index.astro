@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LedgerSection from '../../components/LedgerSection.astro';
+import Surface from '../../components/Surface.astro';
 import NoteCard from '../../components/NoteCard.astro';
 
 const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
@@ -13,14 +13,19 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort(
   title="Notes"
   description="Short working notes on statistics, business intelligence, and analytical method by Aneek Hait."
 >
-  <LedgerSection
-    index="Notes"
-    title="Working notes."
-    lead="Deliberately low-frequency. Published when there is something worth writing down, not on a schedule."
-  >
+  <Surface tone="ink" size="tall">
+    <p class="page-head__index label">Index</p>
+    <h1 class="page-head__title">Working notes.</h1>
+    <p class="page-head__lead">
+      Deliberately low-frequency. Published when there is something worth writing down, not on a
+      schedule &mdash; mostly things I got tired of explaining twice.
+    </p>
+  </Surface>
+
+  <Surface tone="paper">
     {notes.map((entry) => <NoteCard entry={entry} />)}
-    <p class="feed"><a class="mono" href="/rss.xml">Subscribe via RSS →</a></p>
-  </LedgerSection>
+    <p class="feed"><a class="label" href="/rss.xml">Subscribe via RSS &rarr;</a></p>
+  </Surface>
 </BaseLayout>
 
 <style>

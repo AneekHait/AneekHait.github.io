@@ -1,0 +1,65 @@
+---
+/* A full-bleed band that owns its colour. Everything inside reads the surface tokens. */
+interface Props {
+  tone?: 'paper' | 'ink' | 'cobalt' | 'acid';
+  as?: 'section' | 'div' | 'header' | 'footer' | 'article';
+  id?: string;
+  class?: string;
+  label?: string;
+  /* Skip the centred shell when the content needs the full viewport width. */
+  bleed?: boolean;
+  size?: 'tight' | 'default' | 'tall';
+}
+
+const {
+  tone = 'paper',
+  as: Tag = 'section',
+  id,
+  class: className,
+  label,
+  bleed = false,
+  size = 'default',
+} = Astro.props;
+---
+
+<Tag
+  id={id}
+  class:list={['surface', `surface--${tone}`, `surface--${size}`, className]}
+  aria-labelledby={label}
+>
+  {
+    bleed ? (
+      <slot />
+    ) : (
+      <div class="shell">
+        <slot />
+      </div>
+    )
+  }
+</Tag>
+
+<style>
+  .surface {
+    background: var(--bg);
+    color: var(--fg-muted);
+  }
+
+  .surface--tight {
+    padding-block: var(--space-l);
+  }
+
+  .surface--default {
+    padding-block: var(--space-2xl);
+  }
+
+  .surface--tall {
+    padding-block: var(--space-3xl);
+  }
+
+  @media (max-width: 48rem) {
+    .surface--default,
+    .surface--tall {
+      padding-block: var(--space-xl);
+    }
+  }
+</style>

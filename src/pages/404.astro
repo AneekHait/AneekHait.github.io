@@ -1,32 +1,32 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Surface from '../components/Surface.astro';
 ---
 
 <BaseLayout title="Page not found" noindex>
-  <section class="shell notfound">
-    <p class="mono notfound__code">404</p>
-    <h1>No record at this path.</h1>
+  <Surface tone="ink" size="tall" class="notfound">
+    <p class="notfound__code poster">404</p>
+    <h1 class="notfound__title">No record at this path.</h1>
     <p class="notfound__lead">The page you asked for does not exist, or it moved during the site rebuild.</p>
     <div class="notfound__actions">
       <a class="button button--primary" href="/">Home</a>
       <a class="button" href="/work">Work</a>
       <a class="button" href="/notes">Notes</a>
     </div>
-  </section>
+  </Surface>
 </BaseLayout>
 
 <style>
-  .notfound {
-    padding-block: var(--space-2xl);
-  }
-
   .notfound__code {
     color: var(--accent);
+    font-variant-numeric: tabular-nums;
   }
 
-  .notfound h1 {
+  .notfound__title {
     font-size: var(--step-3);
-    margin-block-start: var(--space-s);
+    font-stretch: 78%;
+    text-transform: uppercase;
+    margin-block-start: var(--space-m);
   }
 
   .notfound__lead {

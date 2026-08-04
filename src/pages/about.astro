@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LedgerSection from '../components/LedgerSection.astro';
+import Surface from '../components/Surface.astro';
+import Chapter from '../components/Chapter.astro';
 import portrait from '../assets/images/contact-aneek.webp';
 import { site } from '../data/site';
 import { education } from '../data/experience';
@@ -12,11 +13,11 @@ import { credentials } from '../data/credentials';
   title="About"
   description="How Aneek Hait approaches analysis, works with stakeholders, and what he is looking for next."
 >
-  <section class="intro">
-    <div class="shell intro__inner">
+  <Surface tone="ink" size="tall" class="intro">
+    <div class="intro__inner">
       <div>
-        <p class="mono intro__eyebrow">About</p>
-        <h1>I care more about the question than the tool.</h1>
+        <p class="label page-head__index">About</p>
+        <h1 class="page-head__title">I care more about the question than the tool.</h1>
         <div class="prose intro__prose">
           <p>
             I’m a Data &amp; BI Analyst at Accenture in Kolkata. Most of my work sits in the gap
@@ -27,12 +28,17 @@ import { credentials } from '../data/credentials';
       </div>
       <figure class="portrait">
         <Image src={portrait} alt="Aneek Hait" widths={[260, 500]} sizes="(min-width: 60rem) 18rem, 12rem" />
-        <figcaption class="mono">{site.location}</figcaption>
+        <figcaption class="label">{site.location}</figcaption>
       </figure>
     </div>
-  </section>
+  </Surface>
 
-  <LedgerSection index="01 / Method" title="How I think about problems.">
+  <Chapter
+    index="01"
+    tone="paper"
+    title="What I actually do all day."
+    note="The first version of a request is almost never the real one."
+  >
     <div class="prose">
       <p>
         The first version of a request is almost never the real one. “Can you pull the numbers for
@@ -53,9 +59,14 @@ import { credentials } from '../data/credentials';
         authoritative on a dashboard.
       </p>
     </div>
-  </LedgerSection>
+  </Chapter>
 
-  <LedgerSection index="02 / Practice" title="How I work with stakeholders.">
+  <Chapter
+    index="02"
+    tone="ink"
+    title="The thing that changed how I work."
+    note="I learned where data is allowed to travel the expensive way, and then built around it."
+  >
     <div class="prose">
       <p>
         I write for the person who will act on the result, not for the person who will grade the
@@ -74,9 +85,14 @@ import { credentials } from '../data/credentials';
         numbers after I have forgotten how I produced them.
       </p>
     </div>
-  </LedgerSection>
+  </Chapter>
 
-  <LedgerSection index="03 / Next" title="What I am looking for.">
+  <Chapter
+    index="03"
+    tone="cobalt"
+    title="What I’m after next."
+    note="Messy at the edges is the good kind."
+  >
     <div class="prose">
       <p>
         Analysis, BI, and reporting work where rigor matters as much as clarity — ideally somewhere
@@ -92,59 +108,50 @@ import { credentials } from '../data/credentials';
         {site.resume && <> or <a href={site.resume}>download my résumé</a></>}.
       </p>
     </div>
-  </LedgerSection>
+  </Chapter>
 
-  <LedgerSection index="04 / Credentials" title="Verified credentials.">
+  <Chapter
+    index="04"
+    tone="paper"
+    title="Verified credentials."
+    note="Every link goes to the issuer, not to a screenshot."
+  >
     <ul class="credentials">
       {
         credentials.map((credential) => (
           <li class="credential">
             <a href={credential.url} target="_blank" rel="noopener noreferrer">
               <span class="credential__title">{credential.title}</span>
-              <span class="mono credential__issuer">{credential.issuer} ↗</span>
+              <span class="label credential__issuer">{credential.issuer} ↗</span>
             </a>
           </li>
         ))
       }
     </ul>
 
-    <h3 class="group-heading mono">Education</h3>
+    <h3 class="group-heading label">Education</h3>
     <ol class="education">
       {
         education.map((item) => (
           <li class="education__item">
-            <p class="mono">{item.period}</p>
+            <p class="label">{item.period}</p>
             <div>
               <h4>{item.title}</h4>
-              <p class="mono education__org">{item.org}</p>
+              <p class="label education__org">{item.org}</p>
             </div>
           </li>
         ))
       }
     </ol>
-  </LedgerSection>
+  </Chapter>
 </BaseLayout>
 
 <style>
-  .intro {
-    padding-block: var(--space-2xl) var(--space-l);
-  }
-
   .intro__inner {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--space-l);
+    gap: var(--space-xl);
     align-items: start;
-  }
-
-  .intro__eyebrow {
-    color: var(--accent);
-  }
-
-  .intro h1 {
-    font-size: var(--step-3);
-    margin-block-start: var(--space-s);
-    max-width: 18ch;
   }
 
   .intro__prose {
@@ -152,17 +159,39 @@ import { credentials } from '../data/credentials';
   }
 
   .portrait {
-    width: 12rem;
+    position: relative;
+    width: 14rem;
+    isolation: isolate;
+  }
+
+  .portrait::before {
+    content: '';
+    position: absolute;
+    inset: 0.9rem -0.9rem auto 0.9rem;
+    aspect-ratio: 1 / 1;
+    background: var(--cobalt);
+    z-index: -1;
   }
 
   .portrait :global(img) {
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    filter: grayscale(1) contrast(1.05);
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .portrait figcaption {
-    margin-block-start: var(--space-xs);
+    margin-block-start: var(--space-s);
+  }
+
+  @media (max-width: 48rem) {
+    .intro__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-l);
+    }
+
+    .portrait {
+      width: 11rem;
+    }
   }
 
   .credentials {

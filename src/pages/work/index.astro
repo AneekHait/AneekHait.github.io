@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LedgerSection from '../../components/LedgerSection.astro';
+import Surface from '../../components/Surface.astro';
 import WorkCard from '../../components/WorkCard.astro';
 
 const all = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
@@ -13,24 +13,30 @@ const planned = all.filter((entry) => entry.data.status === 'planned');
   title="Work"
   description="Selected analytics and data projects by Aneek Hait, written up as full case studies."
 >
-  <LedgerSection
-    index="Work"
-    title="Selected work."
-    lead="Each case study follows the same structure: context, question, method, findings, and what I would do next."
-  >
-    {shipped.map((entry) => <WorkCard entry={entry} />)}
+  <Surface tone="ink" size="tall">
+    <p class="page-head__index label">Index</p>
+    <h1 class="page-head__title">Selected work.</h1>
+    <p class="page-head__lead">
+      Each case study follows the same structure: context, question, method, findings, and what I
+      would do next. Written up the way I&rsquo;d want to read someone else&rsquo;s &mdash; method
+      included, not just the result.
+    </p>
+  </Surface>
+
+  <Surface tone="paper">
+    {shipped.map((entry, i) => <WorkCard entry={entry} index={i + 1} />)}
 
     {
       planned.length > 0 && (
         <>
-          <h3 class="group-heading mono">In progress</h3>
+          <h2 class="group-heading label">In progress</h2>
           {planned.map((entry) => (
             <WorkCard entry={entry} />
           ))}
         </>
       )
     }
-  </LedgerSection>
+  </Surface>
 </BaseLayout>
 
 <style>

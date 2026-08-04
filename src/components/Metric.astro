@@ -1,0 +1,31 @@
+---
+/* A figure set at display scale. The number is the object; the label is the caption. */
+interface Props {
+  value: string;
+  label: string;
+  class?: string;
+}
+
+const { value, label, class: className } = Astro.props;
+---
+
+<div class:list={['metric', className]}>
+  <p class="metric__value figure-xl">{value}</p>
+  <p class="metric__label">{label}</p>
+</div>
+
+<style>
+  .metric {
+    display: grid;
+    gap: var(--space-2xs);
+    border-block-start: 2px solid var(--rule-strong);
+    padding-block-start: var(--space-xs);
+  }
+
+  .metric__label {
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--fg-muted);
+    max-width: 18ch;
+  }
+</style>

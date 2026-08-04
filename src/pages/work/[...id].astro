@@ -2,6 +2,8 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Surface from '../../components/Surface.astro';
+import Metric from '../../components/Metric.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('work', ({ data }) => !data.draft && data.status === 'shipped');
@@ -17,22 +19,22 @@ const { title, deck, year, role, tags, metrics, repoUrl, demoUrl, cover, coverAl
 
 <BaseLayout title={title} description={deck}>
   <article class="case">
-    <header class="shell case__head">
-      <p class="case__meta mono">
+    <Surface tone="ink" as="header" size="tall" class="case__head">
+      <p class="case__meta label">
         <a href="/work">Work</a>
         <span aria-hidden="true">/</span>
         <span>{year}</span>
       </p>
-      <h1>{title}</h1>
+      <h1 class="page-head__title">{title}</h1>
       <p class="case__deck">{deck}</p>
 
       <dl class="case__facts">
         <div>
-          <dt class="mono">Role</dt>
+          <dt class="label">Role</dt>
           <dd>{role}</dd>
         </div>
         <div>
-          <dt class="mono">Stack</dt>
+          <dt class="label">Stack</dt>
           <dd>{tags.join(' · ')}</dd>
         </div>
       </dl>
@@ -53,44 +55,39 @@ const { title, deck, year, role, tags, metrics, repoUrl, demoUrl, cover, coverAl
           </div>
         )
       }
-    </header>
+    </Surface>
 
     {
       metrics.length > 0 && (
-        <dl class="shell case__metrics">
-          {metrics.map((metric) => (
-            <div>
-              <dd>{metric.value}</dd>
-              <dt class="mono">{metric.label}</dt>
-            </div>
-          ))}
-        </dl>
+        <Surface tone="cobalt" size="tight">
+          <div class="case__metrics">
+            {metrics.map((metric) => (
+              <Metric value={metric.value} label={metric.label} />
+            ))}
+          </div>
+        </Surface>
       )
     }
 
-    {
-      cover && (
-        <figure class="shell case__cover">
-          <Image src={cover} alt={coverAlt ?? ''} widths={[640, 1100, 1600]} sizes="(min-width: 76rem) 72rem, 100vw" loading="eager" />
-        </figure>
-      )
-    }
+    <Surface tone="paper">
+      {
+        cover && (
+          <figure class="case__cover">
+            <Image src={cover} alt={coverAlt ?? ''} widths={[640, 1100, 1600]} sizes="(min-width: 76rem) 72rem, 100vw" loading="eager" />
+          </figure>
+        )
+      }
 
-    <div class="shell case__body">
-      <div class="prose"><Content /></div>
-    </div>
+      <div class="prose case__body"><Content /></div>
 
-    <div class="shell case__foot">
-      <a class="mono" href="/work">← All work</a>
-    </div>
+      <div class="case__foot">
+        <a class="label" href="/work">← All work</a>
+      </div>
+    </Surface>
   </article>
 </BaseLayout>
 
 <style>
-  .case__head {
-    padding-block: var(--space-xl) var(--space-m);
-  }
-
   .case__meta {
     display: flex;
     gap: 0.5rem;
@@ -101,15 +98,9 @@ const { title, deck, year, role, tags, metrics, repoUrl, demoUrl, cover, coverAl
     text-decoration: none;
   }
 
-  .case__head h1 {
-    font-size: var(--step-3);
-    margin-block-start: var(--space-s);
-  }
-
   .case__deck {
     font-size: var(--step-1);
     max-width: var(--measure);
-    margin-block-start: var(--space-xs);
   }
 
   .case__facts {
@@ -134,41 +125,26 @@ const { title, deck, year, role, tags, metrics, repoUrl, demoUrl, cover, coverAl
   }
 
   .case__metrics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-l);
-    padding-block: var(--space-m);
-    border-block: 1px solid var(--rule);
-  }
-
-  .case__metrics dd {
-    margin: 0;
-    color: var(--accent);
-    font-size: var(--step-3);
-    font-weight: 600;
-    line-height: 1;
-  }
-
-  .case__metrics dt {
-    margin-block-start: var(--space-2xs);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: var(--space-m);
   }
 
   .case__cover {
-    margin-block: var(--space-l);
+    margin-block-end: var(--space-xl);
   }
 
   .case__cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
     border: 1px solid var(--rule);
-    border-radius: var(--radius);
-  }
-
-  .case__body {
-    padding-block-end: var(--space-xl);
   }
 
   .case__foot {
-    padding-block: var(--space-m);
-    border-block-start: 1px solid var(--rule);
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-m);
+    border-block-start: 2px solid var(--rule-strong);
   }
 
   .case__foot a {

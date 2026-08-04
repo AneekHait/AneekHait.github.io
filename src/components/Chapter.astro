@@ -1,0 +1,68 @@
+---
+/* A Broadsheet section: a full-bleed colour field with a numbered, condensed
+   heading. `tone` decides the colour, so pages compose their own rhythm. */
+import Surface from './Surface.astro';
+
+interface Props {
+  index: string;
+  title: string;
+  lead?: string;
+  note?: string;
+  id?: string;
+  tone?: 'paper' | 'ink' | 'cobalt' | 'acid';
+  size?: 'tight' | 'default' | 'tall';
+}
+
+const { index, title, lead, note, id, tone = 'paper', size = 'default' } = Astro.props;
+const headingId = `${id ?? index.replace(/\W+/g, '')}-title`;
+---
+
+<Surface tone={tone} size={size} id={id} label={headingId}>
+  <header class="chapter__head">
+    <p class="chapter__index">{index}</p>
+    <h2 id={headingId}>{title}</h2>
+    {lead && <p class="chapter__lead">{lead}</p>}
+    {note && <p class="chapter__note">{note}</p>}
+    <slot name="margin" />
+  </header>
+  <slot />
+</Surface>
+
+<style>
+  .chapter__head {
+    display: grid;
+    gap: var(--space-xs);
+    margin-block-end: var(--space-l);
+  }
+
+  .chapter__index {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .chapter__head h2 {
+    font-size: var(--step-4);
+    font-stretch: 74%;
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    max-width: 18ch;
+  }
+
+  .chapter__lead {
+    font-size: var(--step-1);
+    color: var(--fg-muted);
+    max-width: var(--measure);
+    text-wrap: pretty;
+  }
+
+  .chapter__note {
+    font-size: var(--step--1);
+    color: var(--fg-dim);
+    max-width: 46ch;
+    text-wrap: pretty;
+  }
+</style>

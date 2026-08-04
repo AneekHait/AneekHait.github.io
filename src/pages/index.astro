@@ -1,9 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import LedgerSection from '../components/LedgerSection.astro';
+import Surface from '../components/Surface.astro';
 import WorkCard from '../components/WorkCard.astro';
 import NoteCard from '../components/NoteCard.astro';
+import portrait from '../assets/images/contact-aneek.webp';
 import { site } from '../data/site';
 import { experience } from '../data/experience';
 import { toolkit } from '../data/toolkit';
@@ -18,59 +20,91 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
 ---
 
 <BaseLayout title="Home">
-  <section class="hero" aria-labelledby="hero-title">
-    <div class="shell hero__inner">
-      <p class="hero__eyebrow mono">
-        <span>{site.role}</span>
-        <span aria-hidden="true">/</span>
-        <span>{site.location}</span>
-      </p>
-      <h1 id="hero-title">{site.name}</h1>
-      <p class="hero__tagline">{site.tagline}<span class="caret" aria-hidden="true"></span></p>
-      <p class="hero__summary">
-        I turn structured and unstructured data into rigorous analysis, useful dashboards, and
-        stakeholder stories that move decisions forward.
-      </p>
-      <div class="hero__actions">
-        <a class="button button--primary" href="/work">Selected work</a>
-        <a class="button" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+  <Surface tone="ink" class="hero">
+    <p class="hero__eyebrow label">
+      <span>{site.role}</span>
+      <span aria-hidden="true">/</span>
+      <span>{site.location}</span>
+    </p>
+
+    <div class="hero__grid">
+      <div class="hero__lede">
+        <h1 id="hero-title" class="poster hero__name">Aneek<br />Hait</h1>
+        <p class="hero__tagline">{site.tagline}</p>
       </div>
 
-      <dl class="now">
-        <dt class="mono">Now</dt>
-        <dd>{site.now}</dd>
-      </dl>
+      <figure class="portrait">
+        <Image
+          src={portrait}
+          alt="Aneek Hait"
+          widths={[400, 640, 900]}
+          sizes="(min-width: 62rem) 30vw, 68vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </figure>
     </div>
-  </section>
 
-  <LedgerSection
-    index="01 / Work"
-    id="work"
-    title="Analysis that ships as something useful."
-    lead="Independent projects, from a private desktop NLP workflow to a reproducible statistical study."
-  >
-    {work.map((entry) => <WorkCard entry={entry} />)}
-    <p class="section-more"><a class="mono" href="/work">All work →</a></p>
-  </LedgerSection>
+    <div class="hero__foot">
+      <div class="hero__prose">
+        <p>
+          Officially: Data &amp; BI Analyst at Accenture in Kolkata. In practice it&rsquo;s about half
+          analysis and half building the thing that makes the analysis possible &mdash; waiting two
+          sprints for a script is how a question goes stale.
+        </p>
+        <div class="actions">
+          <a class="button button--primary" href="/work">Selected work</a>
+          <a class="button" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+        </div>
+      </div>
+      <p class="hero__pull">
+        I let a model write the first draft of a lot of that code. It doesn&rsquo;t get to merge
+        itself.
+      </p>
+    </div>
+  </Surface>
 
-  <LedgerSection
-    index="02 / Experience"
-    id="experience"
-    title="Four years closer to the decision."
-    lead="From software delivery foundations to business-facing analysis, reporting, and data storytelling."
-  >
+  <Surface tone="cobalt" size="tight" class="now">
+    <p class="label now__label">Now</p>
+    <p class="now__body">{site.now}</p>
+  </Surface>
+
+  <Surface tone="paper" id="work">
+    <header class="sec-head">
+      <p class="sec-head__index label">01 &mdash; Work</p>
+      <h2 class="sec-head__title">Things I built because they bugged me.</h2>
+      <p class="sec-head__lead">
+        Both of these started as something I needed, couldn&rsquo;t find, and decided to write
+        instead. Every figure comes from the repo it links to.
+      </p>
+    </header>
+
+    {work.map((entry, i) => <WorkCard entry={entry} index={i + 1} />)}
+
+    <p class="more"><a class="label" href="/work">All work &rarr;</a></p>
+  </Surface>
+
+  <Surface tone="ink" id="experience">
+    <header class="sec-head">
+      <p class="sec-head__index label">02 &mdash; Experience</p>
+      <h2 class="sec-head__title">How I ended up here.</h2>
+      <p class="sec-head__lead">
+        Started in delivery, moved toward the decision. The build instinct never went away.
+      </p>
+    </header>
+
     <ol class="roles">
       {
         experience.map((role) => (
           <li class="role">
-            <p class="role__period mono">{role.period}</p>
+            <p class="role__period label">{role.period}</p>
             <div>
               <h3 class="role__title">
                 {role.title}
-                {role.qualifier && <span class="mono"> ({role.qualifier})</span>}
+                {role.qualifier && <span class="role__qualifier"> ({role.qualifier})</span>}
               </h3>
-              <p class="role__org mono">{role.org}</p>
+              <p class="role__org label">{role.org}</p>
               <ul class="role__points">
                 {role.points.map((point) => (
                   <li>{point}</li>
@@ -81,130 +115,211 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
         ))
       }
     </ol>
-  </LedgerSection>
+  </Surface>
 
-  <LedgerSection
-    index="03 / Toolkit"
-    id="toolkit"
-    title="Tools follow the question."
-    lead="A practical stack for finding patterns, checking the work, and making the result legible."
-  >
-    <dl class="toolkit">
+  <Surface tone="acid" id="toolkit">
+    <header class="sec-head">
+      <p class="sec-head__index label">03 &mdash; Toolkit</p>
+      <h2 class="sec-head__title">What&rsquo;s on the desk.</h2>
+      <p class="sec-head__lead">
+        Grouped by what I&rsquo;m doing rather than by vendor, because the question picks the tool.
+      </p>
+    </header>
+
+    <div class="toolkit">
       {
         toolkit.map((group) => (
-          <div class="toolkit__group">
-            <dt class="mono">{group.label}</dt>
-            <dd>{group.items.join(' · ')}</dd>
-          </div>
+          <section class="toolkit__group">
+            <h3 class="toolkit__label">{group.label}</h3>
+            <ul class="toolkit__items">
+              {group.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </section>
         ))
       }
-    </dl>
-  </LedgerSection>
+    </div>
+  </Surface>
 
-  <LedgerSection
-    index="04 / Notes"
-    id="notes"
-    title="Working notes on method."
-    lead="Short pieces on the statistics and habits behind the analysis."
-  >
+  <Surface tone="paper" id="notes">
+    <header class="sec-head">
+      <p class="sec-head__index label">04 &mdash; Notes</p>
+      <h2 class="sec-head__title">Things I got tired of explaining twice.</h2>
+      <p class="sec-head__lead">Short pieces on the statistics and habits behind the analysis.</p>
+    </header>
+
     {notes.map((entry) => <NoteCard entry={entry} />)}
-    <p class="section-more"><a class="mono" href="/notes">All notes →</a></p>
-  </LedgerSection>
 
-  <LedgerSection index="05 / Contact" id="contact" title="Bring me the messy question.">
+    <p class="more"><a class="label" href="/notes">All notes &rarr;</a></p>
+  </Surface>
+
+  <Surface tone="cobalt" size="tall" id="contact">
+    <p class="sec-head__index label">05 &mdash; Contact</p>
+    <h2 class="contact__title poster">Bring me<br />the messy one.</h2>
     <p class="contact__lead">
-      I’m interested in analysis, BI, and reporting work where rigor matters as much as clarity.
+      Fuzzy question, dubious data, no obvious owner. I&rsquo;m interested in analysis, BI, and
+      reporting work where an analyst is allowed to build the tooling as well as read the output.
     </p>
-    <div class="hero__actions">
+    <div class="actions">
       <a class="button button--primary" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">
         Connect on LinkedIn
       </a>
       <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">
         Browse the code
       </a>
-      {site.resume && <a class="button" href={site.resume}>Download résumé</a>}
+      {site.resume && <a class="button" href={site.resume}>Download r&eacute;sum&eacute;</a>}
     </div>
-  </LedgerSection>
+  </Surface>
 </BaseLayout>
 
 <style>
-  .hero {
-    padding-block: var(--space-2xl) var(--space-xl);
-  }
+  /* Hero ----------------------------------------------------------------- */
 
   .hero__eyebrow {
     display: flex;
-    gap: 0.5rem;
-    color: var(--accent);
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    padding-block-end: var(--space-s);
+    border-block-end: 1px solid var(--rule);
   }
 
-  .hero h1 {
-    font-size: var(--step-4);
-    margin-block-start: var(--space-s);
+  .hero__grid {
+    display: grid;
+    gap: var(--space-l);
+    align-items: end;
+    padding-block-start: var(--space-s);
+  }
+
+  .hero__lede {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .hero__name {
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .portrait {
+    position: relative;
+    margin: 0;
+    max-width: 20rem;
+    isolation: isolate;
+  }
+
+  /* A hard offset block behind the portrait: the only ornament on the page. */
+  .portrait::before {
+    content: '';
+    position: absolute;
+    inset: 1.1rem -1.1rem -1.1rem 1.1rem;
+    background: var(--cobalt);
+    z-index: -1;
+  }
+
+  .portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero__foot {
+    display: grid;
+    gap: var(--space-m);
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-s);
+    border-block-start: 2px solid var(--rule-strong);
   }
 
   .hero__tagline {
+    font-family: var(--font-display);
     font-size: var(--step-2);
+    font-stretch: 82%;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
     color: var(--fg);
-    margin-block-start: var(--space-s);
-    max-width: 22ch;
+    margin: 0;
+    text-wrap: balance;
   }
 
-  .caret {
-    display: inline-block;
-    width: 0.55ch;
-    height: 1em;
-    background: var(--accent);
-    margin-inline-start: 0.25ch;
-    vertical-align: -0.12em;
-    animation: blink 1.1s steps(1) infinite;
-  }
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-
-  .hero__summary {
-    margin-block-start: var(--space-m);
+  .hero__prose {
+    display: grid;
+    gap: var(--space-s);
     max-width: var(--measure);
   }
 
-  .hero__actions {
+  .hero__pull {
+    padding-inline-start: var(--space-s);
+    border-inline-start: 3px solid var(--accent);
+    color: var(--fg);
+    font-size: var(--step-1);
+    text-wrap: pretty;
+  }
+
+  .actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
-    margin-block-start: var(--space-m);
+    margin-block-start: var(--space-xs);
   }
 
-  .now {
-    margin-block-start: var(--space-xl);
-    padding-block-start: var(--space-s);
-    border-block-start: 1px solid var(--rule);
+  /* Now ------------------------------------------------------------------ */
+
+  .now__label {
+    margin-block-end: var(--space-xs);
+  }
+
+  .now__body {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-stretch: 84%;
+    font-weight: 600;
+    line-height: 1.16;
+    color: var(--fg);
+    max-width: 48ch;
+    text-wrap: pretty;
+  }
+
+  /* Section heads -------------------------------------------------------- */
+
+  .sec-head {
     display: grid;
-    grid-template-columns: var(--ledger-index) minmax(0, 1fr);
-    gap: var(--space-m);
+    gap: var(--space-xs);
+    margin-block-end: var(--space-l);
   }
 
-  .now dt {
+  .sec-head__index {
     color: var(--accent);
   }
 
-  .now dd {
-    margin: 0;
-    max-width: var(--measure);
+  .sec-head__title {
+    font-size: var(--step-4);
+    font-stretch: 74%;
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    max-width: 18ch;
   }
 
-  .section-more {
+  .sec-head__lead {
+    font-size: var(--step-1);
+    max-width: var(--measure);
+    text-wrap: pretty;
+  }
+
+  .more {
     margin-block-start: var(--space-m);
     padding-block-start: var(--space-s);
-    border-block-start: 1px solid var(--rule);
+    border-block-start: 2px solid var(--rule-strong);
   }
 
-  .section-more a {
+  .more a {
     text-decoration: none;
   }
+
+  /* Experience ----------------------------------------------------------- */
 
   .roles {
     list-style: none;
@@ -226,11 +341,12 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
 
   .role__title {
     font-size: var(--step-1);
+    font-stretch: 88%;
   }
 
-  .role__title span {
+  .role__qualifier {
     color: var(--fg-dim);
-    text-transform: none;
+    font-weight: 400;
   }
 
   .role__org {
@@ -245,42 +361,94 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
     max-width: var(--measure);
   }
 
+  /* Toolkit -------------------------------------------------------------- */
+
   .toolkit {
     display: grid;
+    gap: var(--space-l);
   }
 
   .toolkit__group {
-    display: grid;
-    grid-template-columns: 11rem minmax(0, 1fr);
-    gap: var(--space-m);
-    padding-block: var(--space-s);
-    border-block-start: 1px solid var(--rule);
+    border-block-start: 2px solid var(--rule-strong);
+    padding-block-start: var(--space-xs);
   }
 
-  .toolkit__group dt {
+  .toolkit__label {
+    font-size: var(--step-1);
+    font-stretch: 80%;
+    text-transform: uppercase;
+    margin-block-end: var(--space-xs);
+  }
+
+  .toolkit__items {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .toolkit__items li {
+    border: 1px solid var(--rule-strong);
+    padding: 0.15rem 0.5rem;
+    font-size: var(--step--1);
     color: var(--fg);
   }
 
-  .toolkit__group dd {
-    margin: 0;
-    max-width: var(--measure);
+  /* Contact -------------------------------------------------------------- */
+
+  .contact__title {
+    font-size: var(--step-5);
+    text-transform: uppercase;
+    margin-block: var(--space-s) var(--space-m);
   }
 
   .contact__lead {
     font-size: var(--step-1);
     max-width: var(--measure);
+    margin-block-end: var(--space-m);
   }
 
-  @media (max-width: 48rem) {
-    .hero {
-      padding-block: var(--space-xl) var(--space-l);
+  @media (min-width: 48rem) {
+    .toolkit {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+      gap: var(--space-xl);
     }
 
-    .now,
-    .role,
-    .toolkit__group {
+    /* The name only fills part of its column, so the tagline sits in the leftover. */
+    .hero__lede {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: end;
+      gap: var(--space-l);
+    }
+
+    .hero__foot {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .toolkit {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-m);
+    }
+  }
+
+  @media (max-width: 62rem) {
+    .role {
       grid-template-columns: 1fr;
       gap: var(--space-2xs);
+    }
+
+    .portrait {
+      max-width: 16rem;
     }
   }
 </style>

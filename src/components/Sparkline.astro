@@ -1,0 +1,66 @@
+---
+/* Inline sparkline sized to sit inside a sentence, Tufte-style. */
+interface Props {
+  values: number[];
+  label: string;
+  class?: string;
+}
+
+const { values, label, class: className } = Astro.props;
+
+const W = 68;
+const H = 18;
+const PAD = 2;
+
+const min = Math.min(...values);
+const max = Math.max(...values);
+const span = max - min || 1;
+const step = values.length > 1 ? (W - PAD * 2) / (values.length - 1) : 0;
+
+const points = values.map((value, i) => {
+  const x = PAD + i * step;
+  const y = PAD + (H - PAD * 2) * (1 - (value - min) / span);
+  return `${x.toFixed(2)},${y.toFixed(2)}`;
+});
+
+const last = points[points.length - 1]?.split(',').map(Number) ?? [0, 0];
+---
+
+{
+  values.length > 1 && (
+    <svg
+      class:list={['sparkline', className]}
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-label={label}
+      preserveAspectRatio="none"
+    >
+      <polyline points={points.join(' ')} />
+      <circle cx={last[0]} cy={last[1]} r="1.8" />
+    </svg>
+  )
+}
+
+<style>
+  .sparkline {
+    display: inline-block;
+    width: 4.6em;
+    height: 1.15em;
+    vertical-align: -0.2em;
+    margin-inline: 0.15em;
+    overflow: visible;
+  }
+
+  .sparkline polyline {
+    fill: none;
+    stroke: var(--data-2);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .sparkline circle {
+    fill: var(--accent);
+  }
+</style>

@@ -47,7 +47,28 @@ const personSchema = {
 <link rel="canonical" href={canonical} />
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-<meta name="theme-color" content="#0a0b0a" />
+<meta name="theme-color" content="#0e0e10" />
+<script is:inline>
+  // Runs before first paint so the chosen theme never flashes the wrong way.
+  (function () {
+    var stored = null;
+    try {
+      stored = localStorage.getItem('aneek-theme');
+    } catch (e) {
+      /* private mode: fall through to the OS preference */
+    }
+    var theme =
+      stored === 'light' || stored === 'dark'
+        ? stored
+        : window.matchMedia('(prefers-color-scheme: light)').matches
+          ? 'light'
+          : 'dark';
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    var meta = document.querySelector("meta[name='theme-color']");
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#f4f2ec' : '#0e0e10');
+  })();
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title={`${site.name} — Notes`} href={new URL('/rss.xml', Astro.site)} />
@@ -69,26 +90,3 @@ const personSchema = {
 <meta name="twitter:image" content={ogImage} />
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-
-<script is:inline>
-  // Applied before first paint so the stored theme never flashes.
-  (() => {
-    const storageKey = 'aneek-theme';
-    let theme = 'dark';
-    try {
-      const stored = localStorage.getItem(storageKey);
-      if (stored === 'light' || stored === 'dark') {
-        theme = stored;
-      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        theme = 'light';
-      }
-    } catch {
-      /* localStorage unavailable; keep the dark default */
-    }
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
-    document
-      .querySelector("meta[name='theme-color']")
-      ?.setAttribute('content', theme === 'light' ? '#f4f2ea' : '#0a0b0a');
-  })();
-</script>

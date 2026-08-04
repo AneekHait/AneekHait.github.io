@@ -1,18 +1,23 @@
 export const toolkit = [
   {
-    label: 'BI & reporting',
-    items: ['Tableau', 'Power BI', 'Excel', 'Dashboard design', 'Stakeholder reporting'],
+    label: 'Analyse',
+    items: ['SQL', 'Python', 'pandas', 'Statistical testing', 'Confidence intervals', 'Data QA'],
   },
   {
-    label: 'Analysis & data',
-    items: ['SQL', 'Python', 'Descriptive analysis', 'Text analysis', 'Statistical testing', 'Data QA'],
+    label: 'Build',
+    items: ['PySide6', 'scikit-learn', 'CLI + GUI tooling', 'pytest', 'Workflow automation'],
   },
   {
-    label: 'Product building',
-    items: ['Internal tools', 'Workflow automation', 'AI-assisted development', 'GitHub Copilot', 'Claude Code'],
+    label: 'Ship & explain',
+    items: ['Power BI', 'Tableau', 'Excel', 'Dashboard design', 'Stakeholder reporting'],
   },
   {
-    label: 'Ways of working',
-    items: ['Cross-functional collaboration', 'Insight presentations', 'Agile delivery', 'Reproducible analysis'],
+    label: 'How I work',
+    items: [
+      'AI-assisted development',
+      'Reproducible analysis',
+      'Tests on anything that ships',
+      'Cross-functional delivery',
+    ],
   },
 ];

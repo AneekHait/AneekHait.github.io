@@ -1,73 +1,169 @@
-/* Terminal Ledger design tokens. Dark is the default; light is opt-in via [data-theme="light"]. */
+/* Broadsheet design tokens. Colour is assigned per surface, not per document. */
 
 :root {
+  --font-display: 'Archivo Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', 'Consolas', monospace;
 
   --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
-  --step-0: clamp(0.95rem, 0.92rem + 0.15vw, 1.03rem);
-  --step-1: clamp(1.13rem, 1.06rem + 0.35vw, 1.35rem);
-  --step-2: clamp(1.4rem, 1.24rem + 0.8vw, 1.95rem);
-  --step-3: clamp(1.8rem, 1.45rem + 1.7vw, 3rem);
-  --step-4: clamp(2.3rem, 1.6rem + 3.4vw, 4.75rem);
+  --step-0: clamp(1rem, 0.97rem + 0.16vw, 1.06rem);
+  --step-1: clamp(1.15rem, 1.08rem + 0.36vw, 1.38rem);
+  --step-2: clamp(1.45rem, 1.26rem + 0.9vw, 2.05rem);
+  --step-3: clamp(1.9rem, 1.5rem + 1.9vw, 3.2rem);
+  --step-4: clamp(2.5rem, 1.65rem + 3.9vw, 5.25rem);
+  /* Poster scale. Only for display type that owns its own line. */
+  --step-5: clamp(3.25rem, 1.9rem + 6.6vw, 9rem);
+  --step-6: clamp(3.75rem, 1.2rem + 12.8vw, 14rem);
 
-  --space-2xs: 0.35rem;
-  --space-xs: 0.65rem;
-  --space-s: 1rem;
-  --space-m: 1.6rem;
-  --space-l: 2.6rem;
-  --space-xl: 4.2rem;
-  --space-2xl: 6.5rem;
+  --space-2xs: 0.3rem;
+  --space-xs: 0.55rem;
+  --space-s: 0.85rem;
+  --space-m: 1.3rem;
+  --space-l: 2.1rem;
+  --space-xl: 3.3rem;
+  --space-2xl: 5rem;
+  --space-3xl: 7.5rem;
 
-  --measure: 68ch;
-  --shell: 76rem;
-  --radius: 3px;
+  --measure: 62ch;
+  --shell: 88rem;
+  --gutter: clamp(1rem, 2.2vw, 2.25rem);
+  --margin-col: 13rem;
 
-  --ledger-index: 6.5rem;
+  /* Swiss poster: hard edges everywhere. */
+  --radius: 0;
+  --radius-media: 0;
   --transition: 160ms ease;
+  --reveal-duration: 620ms;
+  --reveal-ease: cubic-bezier(0.16, 0.84, 0.32, 1);
+
+  /* Raw palette. Semantic tokens are assigned per surface below. */
+  --ink: #0e0e10;
+  --paper: #f4f2ec;
+  --cobalt: #1b34f5;
+  --acid: #d8f034;
+  --vermilion: #ff4a1c;
+
+  --data-1: #1b34f5;
+  --data-2: #ff4a1c;
+  --data-3: #00a39b;
+  --data-4: #7b3ff5;
 }
+
+/* Surfaces ---------------------------------------------------------------
+   Every section declares its own colour. Components must only ever read these
+   semantic tokens, so they adapt to whichever surface they are dropped into.
+   Paper is also the document default so the page always has a background. */
 
 :root,
-[data-theme='dark'] {
-  color-scheme: dark;
-
-  --bg: #0a0b0a;
-  --bg-elev: #101210;
-  --bg-inset: #161815;
-
-  --rule: #262a24;
-  --rule-strong: #3c4238;
-
-  --fg: #e6e9e1;
-  --fg-muted: #a8ada1;
-  --fg-dim: #767b70;
-
-  --accent: #ffb000;
-  --accent-ink: #0a0b0a;
-  --accent-soft: rgba(255, 176, 0, 0.13);
-
-  --data: #3fd0bd;
-  --selection: rgba(255, 176, 0, 0.28);
-}
-
-[data-theme='light'] {
+.surface--paper {
   color-scheme: light;
 
-  --bg: #f4f2ea;
-  --bg-elev: #fbfaf5;
-  --bg-inset: #eceadf;
+  --bg: #f4f2ec;
+  --bg-elev: #ffffff;
+  --bg-inset: #e7e4da;
 
-  --rule: #dbd7c9;
-  --rule-strong: #b4af9d;
+  --rule: rgba(14, 14, 16, 0.16);
+  --rule-strong: rgba(14, 14, 16, 0.4);
 
-  --fg: #1a1c16;
-  --fg-muted: #4a4d43;
-  --fg-dim: #6e7266;
+  --fg: #0e0e10;
+  --fg-muted: #4f4f57;
+  --fg-dim: #6b6b74;
 
-  --accent: #8a5300;
-  --accent-ink: #fbfaf5;
-  --accent-soft: rgba(138, 83, 0, 0.1);
+  --accent: #1b34f5;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(27, 52, 245, 0.08);
 
-  --data: #0f7a6d;
-  --selection: rgba(138, 83, 0, 0.2);
+  --selection: rgba(27, 52, 245, 0.22);
+}
+
+.surface--ink {
+  color-scheme: dark;
+
+  --bg: #0e0e10;
+  --bg-elev: #17171a;
+  --bg-inset: #1d1d21;
+
+  --rule: rgba(244, 242, 236, 0.18);
+  --rule-strong: rgba(244, 242, 236, 0.44);
+
+  --fg: #f4f2ec;
+  --fg-muted: #a9a9b2;
+  --fg-dim: #7d7d86;
+
+  --accent: #d8f034;
+  --accent-ink: #0e0e10;
+  --accent-soft: rgba(216, 240, 52, 0.12);
+
+  --selection: rgba(216, 240, 52, 0.28);
+}
+
+.surface--cobalt {
+  color-scheme: dark;
+
+  --bg: #1b34f5;
+  --bg-elev: #2740f7;
+  --bg-inset: #1730d8;
+
+  --rule: rgba(255, 255, 255, 0.28);
+  --rule-strong: rgba(255, 255, 255, 0.52);
+
+  --fg: #ffffff;
+  --fg-muted: #dde1fd;
+  --fg-dim: #cbd1fb;
+
+  --accent: #d8f034;
+  --accent-ink: #0e0e10;
+  --accent-soft: rgba(216, 240, 52, 0.16);
+
+  --selection: rgba(216, 240, 52, 0.3);
+}
+
+/* Acid is a background field. It never carries text on paper: 1.14:1. */
+.surface--acid {
+  color-scheme: light;
+
+  --bg: #d8f034;
+  --bg-elev: #e0f558;
+  --bg-inset: #c9e02b;
+
+  --rule: rgba(14, 14, 16, 0.24);
+  --rule-strong: rgba(14, 14, 16, 0.48);
+
+  --fg: #0e0e10;
+  --fg-muted: #2b2b12;
+  --fg-dim: #444417;
+
+  --accent: #1b34f5;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(27, 52, 245, 0.12);
+
+  --selection: rgba(27, 52, 245, 0.24);
+}
+
+/* Light theme -----------------------------------------------------------
+   The design above is the dark theme. Light only has to restate the one tone
+   that carries darkness across a whole band: ink. Cobalt and acid are accent
+   fields, not neutrals, so they stay put and keep the section rhythm intact.
+   Ink becomes oat rather than the same cream as paper, otherwise adjacent
+   bands would merge into one flat page. */
+
+[data-theme='light'] .surface--ink {
+  color-scheme: light;
+
+  --bg: #e6e3d9;
+  --bg-elev: #f0eee6;
+  --bg-inset: #dcd8cb;
+
+  --rule: rgba(14, 14, 16, 0.18);
+  --rule-strong: rgba(14, 14, 16, 0.42);
+
+  --fg: #0e0e10;
+  --fg-muted: #4b4b52;
+  --fg-dim: #63636b;
+
+  --accent: #1b34f5;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(27, 52, 245, 0.1);
+
+  --selection: rgba(27, 52, 245, 0.22);
 }
