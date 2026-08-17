@@ -17,6 +17,13 @@ import Surface from '../components/Surface.astro';
 </BaseLayout>
 
 <style>
+  :global(.notfound) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   .notfound__code {
     color: var(--accent);
     font-variant-numeric: tabular-nums;
@@ -39,5 +46,16 @@ import Surface from '../components/Surface.astro';
     flex-wrap: wrap;
     gap: var(--space-xs);
     margin-block-start: var(--space-m);
+  }
+
+  @media (max-width: 36rem) {
+    .notfound__actions .button {
+      flex: 1 1 calc(50% - var(--space-xs));
+      text-align: center;
+    }
+
+    .notfound__actions .button--primary {
+      flex-basis: 100%;
+    }
   }
 </style>

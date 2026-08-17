@@ -357,8 +357,23 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
   .role__points {
     margin-block-start: var(--space-xs);
     display: grid;
-    gap: 0.3rem;
+    gap: 0.35rem;
     max-width: var(--measure);
+    list-style: none;
+    padding-inline-start: 0;
+  }
+
+  .role__points li {
+    position: relative;
+    padding-inline-start: 1.1rem;
+  }
+
+  .role__points li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 600;
   }
 
   /* Toolkit -------------------------------------------------------------- */
@@ -390,9 +405,10 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
 
   .toolkit__items li {
     border: 1px solid var(--rule-strong);
-    padding: 0.15rem 0.5rem;
+    padding: 0.2rem 0.55rem;
     font-size: var(--step--1);
     color: var(--fg);
+    background: rgba(0, 0, 0, 0.03);
   }
 
   /* Contact -------------------------------------------------------------- */
@@ -448,7 +464,37 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
     }
 
     .portrait {
-      max-width: 16rem;
+      max-width: 13rem;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .hero__grid {
+      gap: var(--space-m);
+    }
+
+    .portrait {
+      max-width: 9.5rem;
+      margin-block-start: var(--space-xs);
+    }
+
+    .portrait::before {
+      inset: 0.55rem -0.55rem -0.55rem 0.55rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    .actions .button {
+      flex: 1 1 calc(50% - var(--space-xs));
+      text-align: center;
+    }
+
+    .actions .button--primary {
+      flex-basis: 100%;
     }
   }
 </style>

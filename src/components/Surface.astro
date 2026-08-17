@@ -57,7 +57,14 @@ const {
   }
 
   @media (max-width: 48rem) {
-    .surface--default,
+    .surface--tight {
+      padding-block: var(--space-m);
+    }
+
+    .surface--default {
+      padding-block: var(--space-l);
+    }
+
     .surface--tall {
       padding-block: var(--space-xl);
     }

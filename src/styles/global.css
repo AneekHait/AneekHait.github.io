@@ -173,6 +173,12 @@ main > :first-child > .surface:first-child {
   border-top: 1px solid var(--rule);
 }
 
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -193,23 +199,31 @@ main > :first-child > .surface:first-child {
 .button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   font-family: var(--font-sans);
   font-size: var(--step-0);
   font-weight: 500;
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1.15rem;
+  min-height: 2.75rem;
   border: 1px solid var(--rule-strong);
   border-radius: var(--radius);
   text-decoration: none;
   color: var(--fg);
   background: transparent;
-  transition: border-color var(--transition), background var(--transition), color var(--transition);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color var(--transition), background var(--transition), color var(--transition), transform 100ms ease;
 }
 
 .button:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
+}
+
+.button:active {
+  transform: scale(0.98);
 }
 
 .button--primary {

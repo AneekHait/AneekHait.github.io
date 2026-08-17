@@ -185,6 +185,23 @@ const planned = status === 'planned';
     padding: 0.1rem 0.45rem;
   }
 
+  @media (max-width: 48rem) {
+    .work-card {
+      gap: var(--space-s);
+      padding-block: var(--space-m);
+    }
+
+    .work-card__metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+      gap: var(--space-s);
+    }
+
+    .work-card__tags {
+      gap: 0.3rem;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .work-card__media img,
     .work-card:hover .work-card__media img {

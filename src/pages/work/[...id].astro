@@ -150,4 +150,25 @@ const { title, deck, year, role, tags, metrics, repoUrl, demoUrl, cover, coverAl
   .case__foot a {
     text-decoration: none;
   }
+
+  @media (max-width: 48rem) {
+    .case__facts {
+      gap: var(--space-s) var(--space-m);
+    }
+
+    .case__links {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .case__links .button {
+      width: 100%;
+      text-align: center;
+    }
+
+    .case__metrics {
+      grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+      gap: var(--space-s);
+    }
+  }
 </style>

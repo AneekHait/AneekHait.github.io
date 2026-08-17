@@ -183,17 +183,6 @@ import { credentials } from '../data/credentials';
     margin-block-start: var(--space-s);
   }
 
-  @media (max-width: 48rem) {
-    .intro__inner {
-      grid-template-columns: 1fr;
-      gap: var(--space-l);
-    }
-
-    .portrait {
-      width: 11rem;
-    }
-  }
-
   .credentials {
     list-style: none;
     padding: 0;
@@ -252,15 +241,26 @@ import { credentials } from '../data/credentials';
 
     .intro__inner {
       grid-template-columns: 1fr;
+      gap: var(--space-m);
     }
 
     .portrait {
-      width: 9rem;
+      width: 8.5rem;
+    }
+
+    .portrait::before {
+      inset: 0.5rem -0.5rem -0.5rem 0.5rem;
+    }
+
+    .credential a {
+      padding-block: var(--space-xs);
+      gap: 0.25rem 0.5rem;
     }
 
     .education__item {
       grid-template-columns: 1fr;
       gap: var(--space-2xs);
+      padding-block: var(--space-xs);
     }
   }
 </style>
