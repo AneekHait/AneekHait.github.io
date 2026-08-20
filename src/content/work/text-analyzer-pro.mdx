@@ -7,7 +7,7 @@ role: Solo build — design, implementation, testing
 status: shipped
 tags: ['Python', 'PySide6', 'scikit-learn', 'NLP']
 metrics:
-  - value: '116'
+  - value: '187'
     label: Passing tests
   - value: '4'
     label: Clustering models
@@ -15,8 +15,12 @@ metrics:
     label: Privacy model
 repoUrl: https://github.com/AneekHait/Text-Analyzer-Pro
 cover: ../../assets/images/project-text-analyzer.webp
-coverAlt: Text Analyzer Pro setup screen showing file selection, vectorizer, clustering algorithm, and categorization controls
+coverAlt: Text Analyzer Pro setup screen showing dropzone, vectorizer options, and clustering controls
 ---
+
+import { Image } from 'astro:assets';
+import cleaning from '../../assets/images/project-text-analyzer-cleaning.webp';
+import results from '../../assets/images/project-text-analyzer-results.webp';
 
 ## Context
 
@@ -46,15 +50,25 @@ I built a local PySide6 desktop application around a conventional scikit-learn p
   silhouette score alone.
 - **Reuse models** across runs, and **export** results back into the spreadsheet workflow.
 
+<figure>
+  <Image src={cleaning} alt="Text Analyzer Pro cleaning tab showing rules, custom regex find/replace, and live preview" widths={[480, 900]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Cleaning tab with configurable preprocessing rules, custom regex, and real-time diff preview.</figcaption>
+</figure>
+
 Both a guided GUI and a CLI are exposed. The GUI is for the analyst doing the exploration; the CLI
 is for the same workflow re-run on a schedule.
 
 ## Findings
 
-The build is covered by **116 passing tests**. Keeping the pipeline entirely on-device removed the
+The build is covered by **187 passing tests**. Keeping the pipeline entirely on-device removed the
 data-governance conversation that usually blocks this kind of analysis, and letting the user swap
 vectorizer and algorithm turned model selection into something that could be inspected rather than
 assumed.
+
+<figure>
+  <Image src={results} alt="Text Analyzer Pro results tab with cluster naming, 2D PCA/t-SNE visualization, and export actions" widths={[480, 900]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Results tab featuring 2D projection, cluster naming, status logs, and model persistence.</figcaption>
+</figure>
 
 The more interesting result was about interface design: showing cluster contents *while* parameters
 are being changed does more for output quality than any single algorithmic improvement I made.
