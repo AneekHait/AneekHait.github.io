@@ -5,8 +5,10 @@ import Surface from '../../components/Surface.astro';
 import WorkCard from '../../components/WorkCard.astro';
 
 const all = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
-const shipped = all.filter((entry) => entry.data.status === 'shipped');
-const planned = all.filter((entry) => entry.data.status === 'planned');
+const work = all.filter((entry) => entry.data.category === 'work');
+const sideProjects = all.filter((entry) => entry.data.category === 'side-project');
+const shipped = work.filter((entry) => entry.data.status === 'shipped');
+const planned = work.filter((entry) => entry.data.status === 'planned');
 ---
 
 <BaseLayout
@@ -27,6 +29,16 @@ const planned = all.filter((entry) => entry.data.status === 'planned');
     {shipped.map((entry, i) => <WorkCard entry={entry} index={i + 1} />)}
 
     {
+      sideProjects.length > 0 && (
+        <section class="side-projects" aria-labelledby="side-projects-heading">
+          <h2 id="side-projects-heading" class="group-heading label">Side projects</h2>
+          <p class="group-lead">Independent builds made outside my main work.</p>
+          {sideProjects.map((entry) => <WorkCard entry={entry} />)}
+        </section>
+      )
+    }
+
+    {
       planned.length > 0 && (
         <>
           <h2 class="group-heading label">In progress</h2>
@@ -43,5 +55,14 @@ const planned = all.filter((entry) => entry.data.status === 'planned');
   .group-heading {
     margin-block-start: var(--space-xl);
     color: var(--fg-dim);
+  }
+
+  .group-lead {
+    margin-block-start: var(--space-xs);
+    max-width: var(--measure);
+  }
+
+  .side-projects {
+    margin-block-start: var(--space-xl);
   }
 </style>

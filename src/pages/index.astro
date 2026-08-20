@@ -10,9 +10,11 @@ import { site } from '../data/site';
 import { experience } from '../data/experience';
 import { toolkit } from '../data/toolkit';
 
-const work = (await getCollection('work', ({ data }) => !data.draft && data.status === 'shipped')).sort(
+const allWork = (await getCollection('work', ({ data }) => !data.draft && data.status === 'shipped')).sort(
   (a, b) => a.data.order - b.data.order,
 );
+const work = allWork.filter((entry) => entry.data.category === 'work');
+const sideProjects = allWork.filter((entry) => entry.data.category === 'side-project');
 
 const notes = (await getCollection('notes', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
@@ -85,9 +87,23 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
     <p class="more"><a class="label" href="/work">All work &rarr;</a></p>
   </Surface>
 
+  {
+    sideProjects.length > 0 && (
+      <Surface tone="paper" id="side-projects">
+        <header class="sec-head">
+          <p class="sec-head__index label">02 &mdash; Side projects</p>
+          <h2 class="sec-head__title">Things I built outside the day job.</h2>
+          <p class="sec-head__lead">Independent experiments and useful tools, separate from client work.</p>
+        </header>
+
+        {sideProjects.map((entry) => <WorkCard entry={entry} />)}
+      </Surface>
+    )
+  }
+
   <Surface tone="ink" id="experience">
     <header class="sec-head">
-      <p class="sec-head__index label">02 &mdash; Experience</p>
+      <p class="sec-head__index label">03 &mdash; Experience</p>
       <h2 class="sec-head__title">How I ended up here.</h2>
       <p class="sec-head__lead">
         Started in delivery, moved toward the decision. The build instinct never went away.
@@ -119,7 +135,7 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
 
   <Surface tone="acid" id="toolkit">
     <header class="sec-head">
-      <p class="sec-head__index label">03 &mdash; Toolkit</p>
+      <p class="sec-head__index label">04 &mdash; Toolkit</p>
       <h2 class="sec-head__title">What&rsquo;s on the desk.</h2>
       <p class="sec-head__lead">
         Grouped by what I&rsquo;m doing rather than by vendor, because the question picks the tool.
@@ -144,7 +160,7 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
 
   <Surface tone="paper" id="notes">
     <header class="sec-head">
-      <p class="sec-head__index label">04 &mdash; Notes</p>
+      <p class="sec-head__index label">05 &mdash; Notes</p>
       <h2 class="sec-head__title">Things I got tired of explaining twice.</h2>
       <p class="sec-head__lead">Short pieces on the statistics and habits behind the analysis.</p>
     </header>
@@ -155,7 +171,7 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
   </Surface>
 
   <Surface tone="cobalt" size="tall" id="contact">
-    <p class="sec-head__index label">05 &mdash; Contact</p>
+    <p class="sec-head__index label">06 &mdash; Contact</p>
     <h2 class="contact__title poster">Bring me<br />the messy one.</h2>
     <p class="contact__lead">
       Fuzzy question, dubious data, no obvious owner. I&rsquo;m interested in analysis, BI, and

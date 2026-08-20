@@ -8,8 +8,10 @@ interface Props {
 }
 
 const { entry, index } = Astro.props;
-const { title, deck, year, tags, metrics, status, cover, coverAlt } = entry.data;
+const { title, deck, year, tags, metrics, status, cover, coverAlt, projectUrl } = entry.data;
 const planned = status === 'planned';
+const destination = projectUrl ?? `/work/${entry.id}/`;
+const isExternal = projectUrl != null;
 ---
 
 <article class:list={['work-card', { 'work-card--planned': planned }]}>
@@ -36,7 +38,7 @@ const planned = status === 'planned';
     </p>
 
     <h3 class="work-card__title">
-      {planned ? title : <a href={`/work/${entry.id}/`}>{title}</a>}
+      {planned ? title : <a href={destination} target={isExternal ? '_blank' : undefined} rel={isExternal ? 'noopener noreferrer' : undefined}>{title}</a>}
     </h3>
 
     <p class="work-card__deck">{deck}</p>
