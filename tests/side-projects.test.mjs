@@ -18,5 +18,9 @@ test('renders Atomic Focus in a separate side-project section', () => {
     assert.match(html, /Side projects/);
     assert.match(html, /Atomic Focus/);
     assert.match(html, /https:\/\/atomicfocus\.space/);
+    assert.match(html, /TicketAudit/);
+    assert.match(html, /\/work\/ticket-audit\//);
   }
+
+  assert.equal(existsSync('dist/work/ticket-audit/index.html'), true);
 });

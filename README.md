@@ -62,6 +62,15 @@ Run from the repository root:
 `-- scripts/gen-og.py
 ```
 
+## Featured Work
+
+| Project | Category | Detail |
+| --- | --- | --- |
+| [Text Analyzer Pro](src/content/work/text-analyzer-pro.mdx) | Work | Private, analyst-friendly text clustering for spreadsheet data |
+| [Titanic Survival Analysis](src/content/work/titanic-survival-analysis.mdx) | Work | A familiar dataset pushed beyond familiar conclusions |
+| [TicketAudit](src/content/work/ticket-audit.mdx) | Work | Offline desktop tool for auditing ITSM ticket exports at scale |
+| [Atomic Focus](src/content/work/atomic-focus.mdx) | Side project | Free AI Pomodoro timer with ambient sounds for deep work |
+
 ## Adding Content
 
 **A case study** — create `src/content/work/<slug>.mdx`. Required frontmatter: `title`,

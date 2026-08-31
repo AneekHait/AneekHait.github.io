@@ -1,0 +1,59 @@
+---
+title: TicketAudit
+deck: Offline desktop tool for auditing ITSM ticket exports — handles 100k–300k row files that choke Excel.
+order: 3
+year: '2026'
+role: Side project — design & development
+category: work
+status: shipped
+tags: ['Python', 'PySide6', 'pandas', 'Lingua', 'pytest']
+metrics:
+  - value: '~640'
+    label: Passing tests
+  - value: '300k'
+    label: Rows in 8.4 s
+  - value: '33'
+    label: Languages detected
+repoUrl: https://github.com/AneekHait/TicketAudit
+cover: ../../assets/images/project-ticket-audit.webp
+coverAlt: TicketAudit overview screen showing file summary, column mapping results, and audit status
+---
+
+import { Image } from 'astro:assets';
+import logic from '../../assets/images/project-ticket-audit-logic.webp';
+import language from '../../assets/images/project-ticket-audit-language.webp';
+import extract from '../../assets/images/project-ticket-audit-extract.webp';
+
+## Context
+
+ITSM teams export ticket data from ServiceNow into Excel or CSV for quality reviews. The files routinely reach 100k–300k rows — large enough that Excel becomes sluggish or crashes, and manual inspection of data quality becomes impractical. Teams end up spot-checking a handful of rows and calling it done.
+
+## Product Overview
+
+**TicketAudit** is a free, offline PySide6 desktop application that audits ticket exports at scale and produces a structured Excel report:
+
+- **Column Mapping**: Three-tier scoring (exact match, word-boundary, value-pattern) to automatically align source columns to the expected schema.
+- **Date Disambiguation**: Detects DD/MM vs MM/DD field ordering across the dataset, avoiding silent misparses.
+- **Null Analysis**: Configurable thresholds flag columns and rows with excessive missing data.
+- **8 Logic Rules**: Detects contradictions — open tickets with resolution dates, closed tickets without them, future dates, state vocabulary mismatches, and more.
+
+<figure>
+  <Image src={logic} alt="TicketAudit logic checks screen showing eight validation rules with pass, fail, and review statuses" widths={[480, 900]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Logic checks flagging contradictions across the dataset — worst findings surfaced first.</figcaption>
+</figure>
+
+- **Language Detection**: Identifies language across 33 languages using the Lingua ML model, surfacing unexpected language in description fields.
+
+<figure>
+  <Image src={language} alt="TicketAudit language detection results showing confidence scores across 33 languages" widths={[480, 900]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Language detection with confidence scoring — flags unexpected languages in ticket descriptions.</figcaption>
+</figure>
+
+- **Description Quality Scoring**: Rates ticket descriptions for completeness and usefulness.
+- **Excel Report Export**: Six-tab workbook with PivotTables, charts, and per-ticket QA flags — ready to hand to a manager or attach to a process review.
+- **Guided Review Mode** (Ctrl+R): Walks through flagged tickets one at a time for efficient triage.
+
+<figure>
+  <Image src={extract} alt="TicketAudit extract tool showing date range filter and column selection for export" widths={[480, 900]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Extract tool — filter by date range and columns, export to Excel or CSV in under a second.</figcaption>
+</figure>
