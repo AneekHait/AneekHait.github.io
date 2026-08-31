@@ -3,7 +3,7 @@ title: TicketAudit
 deck: Offline desktop tool for auditing ITSM ticket exports — handles 100k–300k row files that choke Excel.
 order: 3
 year: '2026'
-role: Side project — design & development
+role: Solo build — design, implementation, testing
 category: work
 status: shipped
 tags: ['Python', 'PySide6', 'pandas', 'Lingua', 'pytest']
@@ -26,7 +26,7 @@ import extract from '../../assets/images/project-ticket-audit-extract.webp';
 
 ## Context
 
-ITSM teams export ticket data from ServiceNow into Excel or CSV for quality reviews. The files routinely reach 100k–300k rows — large enough that Excel becomes sluggish or crashes, and manual inspection of data quality becomes impractical. Teams end up spot-checking a handful of rows and calling it done.
+Part of my day-to-day work is analysing ITSM ticket data exported from ServiceNow. Every review cycle started the same way: open the export in Excel, manually check for missing dates, contradictory statuses, and garbled fields. The files routinely hit 100k–300k rows — large enough that Excel hangs, filters break, and silent data errors slip through unnoticed. I got tired of the manual sanity checks failing me, so I built a tool to do them properly. TicketAudit is the open-source replication of that internal tool.
 
 ## Product Overview
 
