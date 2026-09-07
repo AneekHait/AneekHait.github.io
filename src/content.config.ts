@@ -11,7 +11,7 @@ const work = defineCollection({
       order: z.number(),
       year: z.string(),
       role: z.string(),
-      category: z.enum(['work', 'side-project']).default('work'),
+      category: z.enum(['work', 'side-project', 'analysis']).default('work'),
       // "planned" entries render as stubs and must never carry invented metrics or screenshots.
       status: z.enum(['shipped', 'planned']).default('shipped'),
       tags: z.array(z.string()).default([]),

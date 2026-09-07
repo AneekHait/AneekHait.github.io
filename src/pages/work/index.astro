@@ -6,6 +6,7 @@ import WorkCard from '../../components/WorkCard.astro';
 
 const all = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
 const work = all.filter((entry) => entry.data.category === 'work');
+const analysis = all.filter((entry) => entry.data.category === 'analysis' && entry.data.status === 'shipped');
 const sideProjects = all.filter((entry) => entry.data.category === 'side-project');
 const shipped = work.filter((entry) => entry.data.status === 'shipped');
 const planned = work.filter((entry) => entry.data.status === 'planned');
@@ -27,6 +28,16 @@ const planned = work.filter((entry) => entry.data.status === 'planned');
 
   <Surface tone="paper">
     {shipped.map((entry, i) => <WorkCard entry={entry} index={i + 1} />)}
+
+    {
+      analysis.length > 0 && (
+        <section class="analysis-studies" aria-labelledby="analysis-heading">
+          <h2 id="analysis-heading" class="group-heading label">Analysis &amp; studies</h2>
+          <p class="group-lead">Statistical investigations and methodological case studies.</p>
+          {analysis.map((entry) => <WorkCard entry={entry} />)}
+        </section>
+      )
+    }
 
     {
       sideProjects.length > 0 && (
@@ -62,7 +73,8 @@ const planned = work.filter((entry) => entry.data.status === 'planned');
     max-width: var(--measure);
   }
 
-  .side-projects {
+  .side-projects,
+  .analysis-studies {
     margin-block-start: var(--space-xl);
   }
 </style>

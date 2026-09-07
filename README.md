@@ -67,8 +67,9 @@ Run from the repository root:
 | Project | Category | Detail |
 | --- | --- | --- |
 | [Text Analyzer Pro](src/content/work/text-analyzer-pro.mdx) | Work | Private, analyst-friendly text clustering for spreadsheet data |
-| [Titanic Survival Analysis](src/content/work/titanic-survival-analysis.mdx) | Work | A familiar dataset pushed beyond familiar conclusions |
 | [TicketAudit](src/content/work/ticket-audit.mdx) | Work | Offline desktop tool for auditing ITSM ticket exports at scale |
+| [TicketLens](src/content/work/ticketlens.mdx) | Work | Local-first support ticket analysis and intelligence workbench |
+| [Titanic Survival Analysis](src/content/work/titanic-survival-analysis.mdx) | Analysis | A familiar dataset pushed beyond familiar conclusions |
 | [Atomic Focus](src/content/work/atomic-focus.mdx) | Side project | Free AI Pomodoro timer with ambient sounds for deep work |
 
 ## Adding Content

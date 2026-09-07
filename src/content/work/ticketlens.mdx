@@ -1,0 +1,113 @@
+---
+title: TicketLens
+deck: Privacy-first desktop workbench for IT ticket intelligence — local embeddings, semantic clustering, and LLM-powered insights without data leaving your machine.
+order: 3
+year: '2026'
+role: Solo build — design, architecture, local AI engineering
+category: work
+status: shipped
+tags: ['Python', 'PySide6', 'BERTopic', 'llama.cpp', 'UMAP', 'HDBSCAN']
+metrics:
+  - value: '498'
+    label: Passing tests
+  - value: '10'
+    label: Analysis modules
+  - value: '100%'
+    label: Offline & private
+  - value: '4'
+    label: Compute backends
+repoUrl: https://github.com/AneekHait/TicketLens
+cover: ../../assets/images/project-ticketlens.webp
+coverAlt: TicketLens semantic clustering dashboard showing cluster distribution, volume metrics, and top keywords
+---
+
+import { Image } from 'astro:assets';
+import clustering from '../../assets/images/project-ticketlens.webp';
+import overview from '../../assets/images/project-ticketlens-overview.webp';
+import audit from '../../assets/images/project-ticketlens-audit.webp';
+import automation from '../../assets/images/project-ticketlens-automation.webp';
+import kba from '../../assets/images/project-ticketlens-kba.webp';
+import acceleration from '../../assets/images/project-ticketlens-acceleration.webp';
+
+## Context
+
+Enterprise IT service desks handle tens of thousands of incident tickets every month across platforms like ServiceNow, Jira, and Remedy. When leadership asks what is actually driving queue volume, the default response is almost always an Excel pivot table grouped by assigned category.
+
+In practice, those categories are notoriously unreliable. Agents misclassify tickets under pressure, vague generic categories like *"Software / Other"* swallow huge percentages of the queue, and real underlying patterns—such as a specific VPN client build failing after a patch—remain invisible across dozens of disparate categories.
+
+The obvious modern impulse is to run this text through an LLM. But in regulated enterprise environments, support tickets contain employee names, IP addresses, internal hostnames, and system error traces. Uploading spreadsheets of raw internal ticket data to cloud APIs or hosted notebooks violates enterprise security policies and immediately halts the conversation.
+
+I built **TicketLens** to solve this: an end-to-end IT ticket intelligence workbench that runs entirely offline on local hardware, pairing semantic clustering with on-device LLMs.
+
+<figure>
+  <Image src={clustering} alt="TicketLens semantic clustering dashboard showing cluster distribution, volume metrics, and top keywords" widths={[480, 960]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Semantic clustering dashboard — groups tickets by meaning, identifies key drivers, and assigns human-readable cluster titles using local LLMs.</figcaption>
+</figure>
+
+## How It Works
+
+TicketLens takes raw ticket exports (`.xlsx` or `.xls`), guides the user through column mapping, and performs a complete analytical pipeline without sending a single byte across the network:
+
+1. **Local Preprocessing & Scrubbing**: Automatically maps standard ITSM fields (*Short Description*, *Resolution Notes*, *Category*, *Priority*, *Assignment Group*, *Business Duration*), cleans boilerplate headers, and scrubs sensitive identifiers (emails, IPs, timestamps, ticket numbers).
+2. **Dense Semantic Embedding**: Transforms unstructured incident descriptions into dense vector space using compact Hugging Face sentence transformers (e.g., `all-MiniLM-L6-v2`, `bge-small-en-v1.5`, `gte-small`).
+3. **Dimensionality Reduction & Clustering**: Compresses embedding space with UMAP and isolates high-density clusters using HDBSCAN.
+4. **Mid-Run Granularity Tuning**: A unique interactive sweep lets users inspect cluster counts across different minimum cluster sizes *after* embeddings are generated, without recomputing expensive vector representations.
+5. **Local LLM Labelling**: Feeds the top representative tickets and keyword c-TF-IDF signals into an on-device instruct model (Gemma 4, Phi-4-mini, Qwen 2.5 via `llama.cpp`) to generate descriptive, human-grade cluster names.
+
+<figure>
+  <Image src={overview} alt="TicketLens analysis overview with high-level KPI cards, cluster metrics, and distribution charts" widths={[480, 960]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Analysis Overview — high-level KPI cards, resolution metrics, and queue volume distribution across identified clusters.</figcaption>
+</figure>
+
+## Specialized Analysis Modules
+
+Beyond clustering, TicketLens provides 10 purpose-built analytical modules that turn grouped incidents into operational decisions:
+
+- **Quality Audit**: Evaluates ticket hygiene across all clusters, scoring description completeness, resolution documentation quality, and flagging ambiguous or empty resolution notes.
+- **Knowledge Base Article (KBA) & SOP Generators**: Drafts structured KBAs and step-by-step Standard Operating Procedures from recurring incident resolution patterns using the local LLM.
+- **Impact Analysis & Bottlenecks**: Highlights clusters contributing disproportionately to business downtime, recurring reassignment hops, and SLA breaches.
+- **Automation & Self-Service Disposition**: Classifies clusters into 4 operational quadrants (*Automate, Reimagine, Eradicate, Retain*) with projected ROI hours saved.
+- **Category Audit & Cross-Tabulation**: Identifies misfiled tickets and cross-tabulates primary categories against subcategories in an exportable pivot hierarchy.
+- **Word Cloud Studio & Ishikawa Fishbone Diagrams**: Visualizes cluster-level root causes and classifies failure drivers into structured Ishikawa cause categories.
+
+<figure>
+  <Image src={audit} alt="TicketLens ticket documentation quality audit screen scoring completeness and resolution clarity" widths={[480, 960]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Quality Audit module — scores documentation completeness and flags tickets where resolution steps were skipped or vague.</figcaption>
+</figure>
+
+<figure>
+  <Image src={automation} alt="TicketLens automation opportunities quadrant and self-service disposition calculator" widths={[480, 960]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Automation Disposition — evaluates cluster repetitiveness and structure to score self-service and automation candidates.</figcaption>
+</figure>
+
+<figure>
+  <Image src={kba} alt="TicketLens Knowledge Base Article generator drafting solutions from incident patterns" widths={[480, 960]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>KBA Generator — synthesizes recurring incident resolutions into reusable documentation for tier-1 support teams.</figcaption>
+</figure>
+
+## Hardware Acceleration & Engineering
+
+Running local AI models on desktop hardware without frustrating latency required careful optimization across platforms:
+
+- **PyTorch CPU Reference**: Solid baseline ensuring byte-for-byte reproducibility.
+- **Apple Silicon (Metal / MPS)**: GPU-accelerated embeddings via PyTorch MPS and fast LLM inference through `llama.cpp` Metal kernels.
+- **Apple MLX**: Dedicated Apple Silicon runtime with automated numerical parity checks against PyTorch before execution.
+- **OpenVINO INT8 (Windows / Linux)**: CPU quantization leveraging Intel DL Boost / VNNI to achieve a 3.6–4.2× speedup for BERT-family embedding generation.
+
+<figure>
+  <Image src={acceleration} alt="TicketLens hardware acceleration settings interface showing CPU, Metal, MLX, and OpenVINO configurations" widths={[480, 960]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Hardware Acceleration settings — configure local LLM weights and pick optimized runtimes for Apple Silicon or Intel CPUs.</figcaption>
+</figure>
+
+### Architectural Principles
+
+- **Strict UI Layering**: The presentation layer (`src/ui/`) is cleanly separated from the controller and core domain models. A dedicated test (`test_ui_layering.py`) statically inspects the AST to ensure widgets never directly depend on the application controller.
+- **Headless Core**: All clustering, sanitization, disposition scoring, and quality audit engines run headless, allowing automated CLI execution and scriptable batch runs.
+- **Asynchronous Worker Marshalling**: Heavy embedding and inference pipelines run on background worker threads with thread-safe Qt signal marshalling, preventing UI freezes during intensive compute.
+- **Diff-Based Configuration**: Settings and custom stopword overrides are stored as minimal diffs against defaults, allowing lossless session saving and resumption.
+
+## Verification & Outcomes
+
+The project is backed by **498 passing tests** covering edge-case sanitization, UI layering constraints, thread marshalling, and numerical stability across backends.
+
+By keeping the entire pipeline strictly on-device, TicketLens proves that advanced AI-assisted analytics and strict data privacy are not mutually exclusive: analysts can deliver deep queue intelligence, generate operational documentation, and uncover automation targets without data ever leaving the local workstation.
