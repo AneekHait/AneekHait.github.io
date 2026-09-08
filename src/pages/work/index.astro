@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Surface from '../../components/Surface.astro';
 import WorkCard from '../../components/WorkCard.astro';
+import { site } from '../../data/site';
 
 const all = (await getCollection('work', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
 const work = all.filter((entry) => entry.data.category === 'work');
@@ -24,6 +25,14 @@ const planned = work.filter((entry) => entry.data.status === 'planned');
       would do next. Written up the way I&rsquo;d want to read someone else&rsquo;s &mdash; method
       included, not just the result.
     </p>
+    <div class="actions" style="margin-block-start: var(--space-m); display: flex; gap: var(--space-s); flex-wrap: wrap;">
+      <a class="button button--primary" href={site.socials.tableau} target="_blank" rel="noopener noreferrer">
+        Tableau Public Profile ↗
+      </a>
+      <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">
+        GitHub Profile ↗
+      </a>
+    </div>
   </Surface>
 
   <Surface tone="paper">
