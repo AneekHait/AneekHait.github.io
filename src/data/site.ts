@@ -14,6 +14,7 @@ export const site = {
   socials: {
     linkedin: 'https://www.linkedin.com/in/aneekhait/',
     github: 'https://github.com/AneekHait',
+    tableau: 'https://public.tableau.com/app/profile/aneek.hait',
   },
 } as const;
 

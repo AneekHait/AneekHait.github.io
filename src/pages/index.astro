@@ -59,6 +59,7 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
           <a class="button button--primary" href="/work">Selected work</a>
           <a class="button" href={site.socials.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
           <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="button" href={site.socials.tableau} target="_blank" rel="noopener noreferrer">Tableau</a>
         </div>
       </div>
       <p class="hero__pull">
@@ -201,6 +202,9 @@ const notes = (await getCollection('notes', ({ data }) => !data.draft))
       </a>
       <a class="button" href={site.socials.github} target="_blank" rel="noopener noreferrer">
         Browse the code
+      </a>
+      <a class="button" href={site.socials.tableau} target="_blank" rel="noopener noreferrer">
+        Tableau Public
       </a>
       {site.resume && <a class="button" href={site.resume}>Download r&eacute;sum&eacute;</a>}
     </div>

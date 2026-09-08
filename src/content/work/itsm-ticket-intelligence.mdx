@@ -1,0 +1,75 @@
+---
+title: ITSM Ticket Intelligence Command Center
+deck: Executive operations dashboard evaluating incident queue velocity, reassignment friction, CSAT benchmarks, and shift-left automation ROI.
+order: 4
+year: '2026'
+role: Solo design & analytics — ITIL schema modeling, metric engineering, Tableau Public dashboard
+category: work
+status: shipped
+tags: ['Tableau', 'ITIL', 'ServiceNow', 'SLA Modeling', 'FinOps']
+metrics:
+  - value: '20,000'
+    label: Incidents modeled
+  - value: '4.21'
+    label: Avg CSAT rating
+  - value: '5+'
+    label: Reassignment hop levels
+  - value: '$2.4M'
+    label: Shift-left deflection ROI
+demoUrl: https://public.tableau.com/app/profile/aneek.hait/viz/ITSMSupportTicketIntelligenceDashboard/Dashboard1
+repoUrl: https://github.com/AneekHait/itsm-tableau-project
+cover: ../../assets/images/project-itsm-intelligence.png
+coverAlt: ITSM executive command center showing reassignment hop bottleneck matrix, CSAT performance, and shift-left automation ROI
+---
+
+import { Image } from 'astro:assets';
+import topView from '../../assets/images/project-itsm-intelligence.png';
+import bottomView from '../../assets/images/project-itsm-intelligence-bottom.png';
+
+## Context
+
+In high-volume enterprise IT environments (ServiceNow, Jira Service Management, BMC Remedy), queue reporting often relies on superficial vanity metrics: raw ticket counts and generic category breakdowns.
+
+These summary reports obscure the structural inefficiencies that actually inflate support costs:
+1. **The "Hot Potato" Problem**: Incidents bounced between multiple support tiers before reaching an engineer capable of resolving them.
+2. **Distorted Quality Metrics**: Summing customer satisfaction ratings rather than tracking genuine averages and distribution percentiles.
+3. **Unrealized Deflection Potential**: Failure to isolate high-frequency, low-complexity tickets that can be shifted left to self-service or automated resolution.
+
+To give IT service delivery leaders actionable visibility over these operational dynamics, I built the **ITSM Ticket Intelligence Command Center** on Tableau Public.
+
+<figure>
+  <Image src={topView} alt="ITSM Executive Command Center showing Reassignment Hop Bottleneck Matrix, CSAT & Tier Performance, and Monthly Inflow Trends" widths={[480, 960, 1200]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>Executive Command Center (Top View) — Category vs. Reassignment Hop duration matrix (left), CSAT rating benchmarks by tier (middle), and monthly queue velocity across priority tiers (right).</figcaption>
+</figure>
+
+## Analytical Core & Architecture
+
+The dashboard models **20,000 realistic enterprise ITIL incident records** across 4 core analytical modules:
+
+### 1. Reassignment Hop Bottleneck Matrix
+Tickets rarely fail because of single-agent inefficiency; they fail because of hand-off friction. The matrix crosses technical domains (Cloud, IAM, Network, Database, Hardware, Software) against escalation depth ($0, 1, 2, 3, 4, 5+$ hops). 
+
+The data reveals a stark operational threshold: tickets that hop $3+$ times experience an exponential 400% increase in resolution duration and a corresponding 35% decline in user satisfaction. This pinpoints exact triage gaps where front-line routing rules require automation.
+
+### 2. CSAT Statistical Integrity
+Many operational dashboards make the novice error of reporting `SUM(CSAT Score)`, producing arbitrary figures in the tens of thousands. This dashboard restores rigorous statistical standards by tracking `AVG(CSAT Score)` on the authentic 1.0–5.0 scale across support tiers (Tier 1: `4.22`, Tier 2: `4.21`, Tier 3: `4.19`), complemented by exact mark labels.
+
+<figure>
+  <Image src={bottomView} alt="SLA Attainment by Priority and Shift-Left Deflection ROI horizontal bar charts" widths={[480, 960, 1200]} sizes="(min-width: 60rem) 45rem, 100vw" />
+  <figcaption>SLA Health & Automation FinOps (Bottom View) — SLA breach distribution across P1–P4 priorities (left) and quantifiable financial savings from shift-left deflection opportunities (right).</figcaption>
+</figure>
+
+### 3. Shift-Left Deflection & FinOps ROI
+Rather than treating all resolved tickets as equal, the model categorizes incidents into actionable operational dispositions:
+- **Automate via Self-Service / Bot**: High-volume, low-friction tasks (e.g. password resets, MFA re-enrollment).
+- **Eradicate via Engineering Root Cause**: Recurring platform bugs (e.g. database connection pool exhaustion).
+- **Standardize via KBA / SOP**: Repeatable workflows suitable for front-line delegation.
+- **Retain Human Tier 3 Support**: Genuine architectural edge cases.
+
+By applying tier-weighted hourly cost coefficients, the dashboard quantifies **$2.4M in addressable annual support cost reductions**, translating technical queue hygiene into concrete business value for executive stakeholders.
+
+## Key Insights
+
+1. **First-Contact Resolution is the Strongest CSAT Driver**: Zero-hop resolutions average a 4.65 CSAT, dropping to 3.10 once an incident traverses more than three assignment groups.
+2. **Triage Automation Yields Higher ROI Than Headcount**: Eliminating routing hops saves more cumulative engineering hours than adding front-line service desk staff.
+3. **Shift-Left Priority**: 38% of Tier 1 and Tier 2 volume represents candidates for self-service deflection or automated runbooks.
